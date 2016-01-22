@@ -5,10 +5,32 @@ class State(models.Model):
     name = models.CharField(max_length=30)
     abbr = models.CharField(max_length=2)
 
+    def __str__(self):
+        return self.name
+
+class Standard(models.Model):
+    name = models.CharField(max_length=255)
+
+class Cause(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+class NEPAType(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
 class FieldOffice(models.Model):
     state = models.ForeignKey("State")
     office_code = models.CharField(max_length=55)
     office_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.office_name
+
 
 class Operator(models.Model):
 
@@ -25,7 +47,7 @@ class Operator(models.Model):
     release_text = models.CharField(max_length=255)
 
     def __str__(self):
-        return "State: {}, Allotment name {},".format(self.admin_state,  self.allotment_name)
+        return self.operator_display_name
 
 class Allotment(models.Model):
 
@@ -39,7 +61,7 @@ class Allotment(models.Model):
     amp_text = models.CharField(max_length=255)
     amp_implement_date = models.DateTimeField()
     management_stat_text = models.CharField(max_length=255)
-    auth_no	= models.ManyToMany("Operator")
+    auth_no	= models.ManyToManyField("Operator")
     permitted_aums = models.IntegerField()
     suspended_aums = models.IntegerField()
     susp_use_temp = models.CharField(max_length=10)
@@ -74,7 +96,8 @@ class Health(models.Model):
     auth_no = models.ForeignKey("Operator")
     land_health_eval_date = models.DateTimeField(null=True,blank=True) # Date of Most Recent Land Health Evaluation Report (mm/dd/yyyy)1
     causal_factors_date = models.DateTimeField(null=True,blank=True) #Date of most recent Determination of Causal Factor(s) (mm/dd/yy
-    standards_not_met = models.ForeignKey("Standards") # Land Health Standard(s) Not Achieved in the Allotment and Signi	text	1
+    standards_not_met = models.ForeignKey("Standard") # Land Health Standard(s) Not Achieved in the Allotment and Signi	text	1
+    cause_not_met = models.ForeignKey("Cause")
     nepa_type = models.ForeignKey("NEPAType") #Type of NEPA Analysis for Grazing Authorization (EA, EIS, CX, D
     nepa_date = models.DateTimeField(null=True,blank=True) #Date NEPA Analysis Completed (mm/dd/yyyy)5
     nepa_identifier = models.CharField(max_length=55) #NEPA Identifier6
