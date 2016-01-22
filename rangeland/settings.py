@@ -60,11 +60,14 @@ WSGI_APPLICATION = 'rangeland.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': SECURE_SETTINGS_DB_NAME,
+        'USER': SECURE_SETTINGS_DB_USER,
+        'PASSWORD': SECURE_SETTINGS_DB_PASSWORD,
+        'HOST': SECURE_SETTINGS_DB_HOST,
+        'PORT': SECURE_SETTINGS_DB_PORT,
     }
 }
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
