@@ -27,6 +27,12 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+DATE_FORMAT = [
+'%m/%d/%Y',
+'%m-%d-%Y'
+]
+
+
 
 # Application definition
 
