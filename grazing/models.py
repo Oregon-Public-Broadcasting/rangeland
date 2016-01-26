@@ -62,7 +62,7 @@ class Allotment(models.Model):
     grazing_decision = models.CharField(max_length=255)
     public_acres = models.FloatField()
     amp_text = models.CharField(max_length=255)
-    amp_implement_date = models.DateTimeField(null=True, blank=True)
+    amp_implement_date = models.DateTimeField(null=True)
     management_stat_text = models.CharField(max_length=255)
     auth_no	= models.ManyToManyField("Operator", null=True, blank=True)
     # following three fields are actually tied to permit rather than allotment
