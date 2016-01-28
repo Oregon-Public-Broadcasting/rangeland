@@ -105,11 +105,11 @@ class Health(models.Model):
     allotment = models.ForeignKey("Allotment")
     allotment_name = models.CharField(max_length=255, null=True)
     allotment_unique = models.CharField(max_length=55, null=True)
-    auth_no = models.ForeignKey("Authorization") # Is this really necessary if its already tied to allotment?
+    # auth_no = models.ForeignKey("Authorization") # Is this really necessary if its already tied to allotment?
     land_health_eval_date = models.DateTimeField(null=True,blank=True) # Date of Most Recent Land Health Evaluation Report (mm/dd/yyyy)1
     causal_factors_date = models.DateTimeField(null=True,blank=True) #Date of most recent Determination of Causal Factor(s) (mm/dd/yy
-    land_health_status = models.NullBooleanField() #models.ManyToManyField("Standard") # Land Health Standard(s) Not Achieved in the Allotment and Signi	text	1
-    livestock_factor = models.NullBooleanField()
+    land_health_status = models.CharField(max_length=3) #models.ManyToManyField("Standard") # Land Health Standard(s) Not Achieved in the Allotment and Signi	text	1
+    #livestock_factor = models.NullBooleanField()
     description = models.TextField(null=True)
     # cause_not_met = models.ForeignKey("Cause")
     nepa_type = models.ForeignKey("NEPAType") #Type of NEPA Analysis for Grazing Authorization (EA, EIS, CX, D
@@ -121,12 +121,12 @@ class Health(models.Model):
     def __str__(self):
         return self.allotment.allotment_name
 
-################################################################################################################################################################################################
+##############################################################################################################################################################################################
 
 class Boundary(models.Model):
     allotment = models.ForeignKey("Allotment", null=True)  # Link this to our allotments, looks like some will not have a match
     allotment_name = models.CharField(max_length=255, null=True) # for boundaries that don't have an allotment entry in our db
-    allotment_number = models.CharField(max_length=55, null=True) # for boundaries that don't have an allotment entry in our db
+    # allotment_number = models.CharField(max_length=55, null=True) # for boundaries that don't have an allotment entry in our db
     allotment_unique = models.CharField(max_length=255, null=True) # for boundaries that don't have an allotment entry in our db
     state = models.CharField(max_length=2, null=True) # for boundaries that don't have an allotment entry in our db
     geom = models.MultiPolygonField(srid=4326)  # Adjust SRID accordingly
