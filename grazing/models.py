@@ -35,10 +35,16 @@ class FieldOffice(models.Model):
     def __str__(self):
         return self.office_name
 
-class Operator(models.Model):
+class Authorization(models.Model):
+    number = models.CharField(max_length=55)
 
-    field_office = models.ForeignKey("FieldOffice")
-    auth_no = models.CharField(max_length=255)
+    def __str__(self):
+        return self.number
+
+class Operator(models.Model):
+    # field_office = models.ForeignKey("FieldOffice")
+    # auth_no = models.CharField(max_length=55, null=True)
+    auth_no = models.ManyToManyField("Authorization")
     operator_display_name = models.CharField(max_length=255)
     address1 = models.CharField(max_length=255)
     address2 = models.CharField(max_length=255)
@@ -64,7 +70,7 @@ class Allotment(models.Model):
     amp_text = models.CharField(max_length=255)
     amp_implement_date = models.DateTimeField(null=True)
     management_stat_text = models.CharField(max_length=255)
-    auth_no	= models.ManyToManyField("Operator", null=True, blank=True)
+    auth_no	= models.ManyToManyField("Authorization", null=True, blank=True)
     # following three fields are actually tied to permit rather than allotment
         #permitted_aums = models.IntegerField()
         #suspended_aums = models.IntegerField()
@@ -73,36 +79,38 @@ class Allotment(models.Model):
     def __str__(self):
         return "Allotment name: {}, State: {}".format(self.allotment_name,  self.field_office.state)
 
-################################################################################################################################################################################################
-
 class Permit(models.Model):
 
-    field_office = models.ForeignKey("FieldOffice")
-    auth_no = models.ForeignKey("Operator")
+    field_office = models.ForeignKey("FieldOffice") # Is this really necessary if its already tied to allotment?
+    auth_no = models.ForeignKey("Authorization")
     pl_effect_dt = models.DateTimeField()
     pl_exp_dt = models.DateTimeField()
     permit_status = models.CharField(max_length=50)
     allotment = models.ForeignKey("Allotment")
-    livestock_number = models.IntegerField()
+    livestock_number = models.FloatField()
     livestock_kind = models.CharField(max_length=25)
     pd_beg_dt = models.DateTimeField()
     pd_end_dt = models.DateTimeField()
     type_use = models.CharField(max_length=50)
-    pl_percent = models.IntegerField()
-    aums = models.IntegerField()
+    pl_percent = models.FloatField()
+    aums = models.FloatField()
 
     def __str__(self):
         return self.auth_no.operator_display_name
 
+
 class Health(models.Model):
 
-    field_office = models.ForeignKey("FieldOffice") # Is this really necessary if its already tied to allotment?
+    #field_office = models.ForeignKey("FieldOffice") # Is this really necessary if its already tied to allotment?
     allotment = models.ForeignKey("Allotment")
-    auth_no = models.ForeignKey("Operator") # Is this really necessary if its already tied to allotment?
+    allotment_name = models.CharField(max_length=255, null=True)
+    allotment_unique = models.CharField(max_length=55, null=True)
+    auth_no = models.ForeignKey("Authorization") # Is this really necessary if its already tied to allotment?
     land_health_eval_date = models.DateTimeField(null=True,blank=True) # Date of Most Recent Land Health Evaluation Report (mm/dd/yyyy)1
     causal_factors_date = models.DateTimeField(null=True,blank=True) #Date of most recent Determination of Causal Factor(s) (mm/dd/yy
     land_health_status = models.NullBooleanField() #models.ManyToManyField("Standard") # Land Health Standard(s) Not Achieved in the Allotment and Signi	text	1
     livestock_factor = models.NullBooleanField()
+    description = models.TextField(null=True)
     # cause_not_met = models.ForeignKey("Cause")
     nepa_type = models.ForeignKey("NEPAType") #Type of NEPA Analysis for Grazing Authorization (EA, EIS, CX, D
     nepa_date = models.DateTimeField(null=True,blank=True) #Date NEPA Analysis Completed (mm/dd/yyyy)5
@@ -113,10 +121,16 @@ class Health(models.Model):
     def __str__(self):
         return self.allotment.allotment_name
 
+################################################################################################################################################################################################
+
 class Boundary(models.Model):
-    allotment = models.ForeignKey("Allotment")  # Link this to our allotments
+    allotment = models.ForeignKey("Allotment", null=True)  # Link this to our allotments, looks like some will not have a match
+    allotment_name = models.CharField(max_length=255, null=True) # for boundaries that don't have an allotment entry in our db
+    allotment_number = models.CharField(max_length=55, null=True) # for boundaries that don't have an allotment entry in our db
+    allotment_unique = models.CharField(max_length=255, null=True) # for boundaries that don't have an allotment entry in our db
+    state = models.CharField(max_length=2, null=True) # for boundaries that don't have an allotment entry in our db
     geom = models.MultiPolygonField(srid=4326)  # Adjust SRID accordingly
     objects = models.GeoManager()
 
     def __str__(self):
-        return "LandslideDeform: " + self.label
+        return "Allotment Boundary: " + self.allotment_name

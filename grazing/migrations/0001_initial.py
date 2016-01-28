@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import django.contrib.gis.db.models.fields
 
 
 class Migration(migrations.Migration):
@@ -15,28 +16,39 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('allotment_number', models.CharField(max_length=11)),
-                ('allotment_id', models.CharField(max_length=255)),
+                ('allotment_unique', models.CharField(max_length=255)),
                 ('allotment_name', models.CharField(max_length=255)),
                 ('available_for_grazing', models.CharField(max_length=1)),
                 ('grazing_decision', models.CharField(max_length=255)),
-                ('public_acres', models.IntegerField()),
+                ('public_acres', models.FloatField()),
                 ('amp_text', models.CharField(max_length=255)),
-                ('amp_implement_date', models.DateTimeField()),
+                ('amp_implement_date', models.DateTimeField(null=True)),
                 ('management_stat_text', models.CharField(max_length=255)),
-                ('permitted_aums', models.IntegerField()),
-                ('suspended_aums', models.IntegerField()),
-                ('susp_use_temp', models.CharField(max_length=10)),
-                ('new_allotment_id', models.CharField(max_length=10)),
             ],
             options={
             },
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='Cause',
+            name='Authorization',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=255)),
+                ('number', models.CharField(max_length=55)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Boundary',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('allotment_name', models.CharField(max_length=255, null=True)),
+                ('allotment_number', models.CharField(max_length=55, null=True)),
+                ('allotment_unique', models.CharField(max_length=255, null=True)),
+                ('state', models.CharField(max_length=2, null=True)),
+                ('geom', django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326)),
+                ('allotment', models.ForeignKey(to='grazing.Allotment', null=True)),
             ],
             options={
             },
@@ -57,11 +69,17 @@ class Migration(migrations.Migration):
             name='Health',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('allotment_name', models.CharField(max_length=255, null=True)),
+                ('allotment_unique', models.CharField(max_length=55, null=True)),
                 ('land_health_eval_date', models.DateTimeField(null=True, blank=True)),
                 ('causal_factors_date', models.DateTimeField(null=True, blank=True)),
+                ('land_health_status', models.NullBooleanField()),
+                ('livestock_factor', models.NullBooleanField()),
+                ('description', models.TextField(null=True)),
                 ('nepa_date', models.DateTimeField(null=True, blank=True)),
                 ('nepa_identifier', models.CharField(max_length=55)),
                 ('permit_status', models.CharField(max_length=55)),
+                ('year_released', models.IntegerField(null=True)),
                 ('allotment', models.ForeignKey(to='grazing.Allotment')),
             ],
             options={
@@ -73,6 +91,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=255)),
+                ('abbr', models.CharField(max_length=4, null=True)),
             ],
             options={
             },
@@ -82,7 +101,6 @@ class Migration(migrations.Migration):
             name='Operator',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('auth_no', models.CharField(max_length=255)),
                 ('operator_display_name', models.CharField(max_length=255)),
                 ('address1', models.CharField(max_length=255)),
                 ('address2', models.CharField(max_length=255)),
@@ -92,7 +110,7 @@ class Migration(migrations.Migration):
                 ('zipcode69', models.CharField(max_length=255)),
                 ('phone_number', models.CharField(max_length=255)),
                 ('release_text', models.CharField(max_length=255)),
-                ('field_office', models.ForeignKey(to='grazing.FieldOffice')),
+                ('auth_no', models.ManyToManyField(to='grazing.Authorization')),
             ],
             options={
             },
@@ -105,26 +123,16 @@ class Migration(migrations.Migration):
                 ('pl_effect_dt', models.DateTimeField()),
                 ('pl_exp_dt', models.DateTimeField()),
                 ('permit_status', models.CharField(max_length=50)),
-                ('livestock_number', models.IntegerField()),
+                ('livestock_number', models.FloatField()),
                 ('livestock_kind', models.CharField(max_length=25)),
                 ('pd_beg_dt', models.DateTimeField()),
                 ('pd_end_dt', models.DateTimeField()),
                 ('type_use', models.CharField(max_length=50)),
-                ('pl_percent', models.IntegerField()),
-                ('aums', models.IntegerField()),
+                ('pl_percent', models.FloatField()),
+                ('aums', models.FloatField()),
                 ('allotment', models.ForeignKey(to='grazing.Allotment')),
                 ('auth_no', models.ForeignKey(to='grazing.Operator')),
                 ('field_office', models.ForeignKey(to='grazing.FieldOffice')),
-            ],
-            options={
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
-            name='Standard',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=255)),
             ],
             options={
             },
@@ -149,12 +157,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='health',
-            name='cause_not_met',
-            field=models.ForeignKey(to='grazing.Cause'),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='health',
             name='field_office',
             field=models.ForeignKey(to='grazing.FieldOffice'),
             preserve_default=True,
@@ -166,12 +168,6 @@ class Migration(migrations.Migration):
             preserve_default=True,
         ),
         migrations.AddField(
-            model_name='health',
-            name='standards_not_met',
-            field=models.ForeignKey(to='grazing.Standard'),
-            preserve_default=True,
-        ),
-        migrations.AddField(
             model_name='fieldoffice',
             name='state',
             field=models.ForeignKey(to='grazing.State'),
@@ -180,7 +176,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='allotment',
             name='auth_no',
-            field=models.ManyToManyField(to='grazing.Operator'),
+            field=models.ManyToManyField(to='grazing.Operator', null=True, blank=True),
             preserve_default=True,
         ),
         migrations.AddField(

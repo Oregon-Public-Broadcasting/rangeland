@@ -7,14 +7,14 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('grazing', '0003_auto_20160125_1724'),
+        ('grazing', '0001_initial'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='allotment',
+            model_name='permit',
             name='auth_no',
-            field=models.ManyToManyField(to='grazing.Operator', null=True, blank=True),
+            field=models.ForeignKey(to='grazing.Authorization'),
             preserve_default=True,
         ),
     ]
