@@ -102,27 +102,38 @@ class Permit(models.Model):
 class Health(models.Model):
 
     #field_office = models.ForeignKey("FieldOffice") # Is this really necessary if its already tied to allotment?
-    allotment = models.ForeignKey("Allotment")
+    allotment = models.ForeignKey("Allotment", null=True)
     allotment_name = models.CharField(max_length=255, null=True)
     allotment_unique = models.CharField(max_length=55, null=True)
+
+    ### In Excel Files from BLM
     # auth_no = models.ForeignKey("Authorization") # Is this really necessary if its already tied to allotment?
-    land_health_eval_date = models.DateTimeField(null=True,blank=True) # Date of Most Recent Land Health Evaluation Report (mm/dd/yyyy)1
-    causal_factors_date = models.DateTimeField(null=True,blank=True) #Date of most recent Determination of Causal Factor(s) (mm/dd/yy
-    land_health_status = models.CharField(max_length=3) #models.ManyToManyField("Standard") # Land Health Standard(s) Not Achieved in the Allotment and Signi	text	1
+    # land_health_eval_date = models.DateTimeField(null=True,blank=True) # Date of Most Recent Land Health Evaluation Report (mm/dd/yyyy)1
+    # causal_factors_date = models.DateTimeField(null=True,blank=True) #Date of most recent Determination of Causal Factor(s) (mm/dd/yy
     #livestock_factor = models.NullBooleanField()
-    description = models.TextField(null=True)
+    # description = models.TextField(null=True)
     # cause_not_met = models.ForeignKey("Cause")
-    nepa_type = models.ForeignKey("NEPAType") #Type of NEPA Analysis for Grazing Authorization (EA, EIS, CX, D
-    nepa_date = models.DateTimeField(null=True,blank=True) #Date NEPA Analysis Completed (mm/dd/yyyy)5
-    nepa_identifier = models.CharField(max_length=55) #NEPA Identifier6
-    permit_status = models.CharField(max_length=55) #Permit or Lease Status
-    year_released = models.IntegerField(null=True) # 2012 or 2007 release from BLM to PEER/WWP?
+    # nepa_type = models.ForeignKey("NEPAType") #Type of NEPA Analysis for Grazing Authorization (EA, EIS, CX, D
+    # nepa_date = models.DateTimeField(null=True,blank=True) #Date NEPA Analysis Completed (mm/dd/yyyy)5
+    # nepa_identifier = models.CharField(max_length=55) #NEPA Identifier6
+    # permit_status = models.CharField(max_length=55) #Permit or Lease Status
+    # year_released = models.IntegerField(null=True) # 2012 or 2007 release from BLM to PEER/WWP?
+    lhs2007 = models.CharField(max_length=255, null=True)
+    lhs2012 =models.CharField(max_length=255, null=True)
+    lhs = models.CharField(max_length=255, null=True)
+
+    ### In shapefiles from Lattin
+    ecoregion1 = models.CharField(max_length=255, null=True)
+    ecoregion2 = models.CharField(max_length=255, null=True)
+    ecoregion3 = models.CharField(max_length=255, null=True)
+    geom = models.MultiPolygonField(srid=4326,null=True)  # Adjust SRID accordingly
+    objects = models.GeoManager()
 
     def __str__(self):
-        return self.allotment.allotment_name
+        return self.allotment_name
 
-##############################################################################################################################################################################################
-
+########################################################################################################################
+# vvvvvvvvvv Defunct vvvvvvvvvv
 class Boundary(models.Model):
     allotment = models.ForeignKey("Allotment", null=True)  # Link this to our allotments, looks like some will not have a match
     allotment_name = models.CharField(max_length=255, null=True) # for boundaries that don't have an allotment entry in our db
@@ -131,6 +142,5 @@ class Boundary(models.Model):
     state = models.CharField(max_length=2, null=True) # for boundaries that don't have an allotment entry in our db
     geom = models.MultiPolygonField(srid=4326)  # Adjust SRID accordingly
     objects = models.GeoManager()
-
     def __str__(self):
         return "Allotment Boundary: " + self.allotment_name
