@@ -105,19 +105,20 @@ class Health(models.Model):
     allotment = models.ForeignKey("Allotment", null=True)
     allotment_name = models.CharField(max_length=255, null=True)
     allotment_unique = models.CharField(max_length=55, null=True)
+    ### not using ... In Excel Files from BLM ... ###
+        # auth_no = models.ForeignKey("Authorization") # Is this really necessary if its already tied to allotment?
+        # land_health_eval_date = models.DateTimeField(null=True,blank=True) # Date of Most Recent Land Health Evaluation Report (mm/dd/yyyy)1
+        # causal_factors_date = models.DateTimeField(null=True,blank=True) #Date of most recent Determination of Causal Factor(s) (mm/dd/yy
+        # livestock_factor = models.NullBooleanField()
+        # description = models.TextField(null=True)
+        # cause_not_met = models.ForeignKey("Cause")
+        # nepa_type = models.ForeignKey("NEPAType") #Type of NEPA Analysis for Grazing Authorization (EA, EIS, CX, D
+        # nepa_date = models.DateTimeField(null=True,blank=True) #Date NEPA Analysis Completed (mm/dd/yyyy)5
+        # nepa_identifier = models.CharField(max_length=55) #NEPA Identifier6
+        # permit_status = models.CharField(max_length=55) #Permit or Lease Status
+        # year_released = models.IntegerField(null=True) # 2012 or 2007 release from BLM to PEER/WWP?
+    ### ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ###
 
-    ### In Excel Files from BLM
-    # auth_no = models.ForeignKey("Authorization") # Is this really necessary if its already tied to allotment?
-    # land_health_eval_date = models.DateTimeField(null=True,blank=True) # Date of Most Recent Land Health Evaluation Report (mm/dd/yyyy)1
-    # causal_factors_date = models.DateTimeField(null=True,blank=True) #Date of most recent Determination of Causal Factor(s) (mm/dd/yy
-    #livestock_factor = models.NullBooleanField()
-    # description = models.TextField(null=True)
-    # cause_not_met = models.ForeignKey("Cause")
-    # nepa_type = models.ForeignKey("NEPAType") #Type of NEPA Analysis for Grazing Authorization (EA, EIS, CX, D
-    # nepa_date = models.DateTimeField(null=True,blank=True) #Date NEPA Analysis Completed (mm/dd/yyyy)5
-    # nepa_identifier = models.CharField(max_length=55) #NEPA Identifier6
-    # permit_status = models.CharField(max_length=55) #Permit or Lease Status
-    # year_released = models.IntegerField(null=True) # 2012 or 2007 release from BLM to PEER/WWP?
     lhs2007 = models.CharField(max_length=255, null=True)
     lhs2012 =models.CharField(max_length=255, null=True)
     lhs = models.CharField(max_length=255, null=True)
