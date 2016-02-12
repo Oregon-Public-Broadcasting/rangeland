@@ -25,6 +25,10 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
+TEMPLATE_DIRS = {
+    'grazing/templates/'
+}
+
 ALLOWED_HOSTS = []
 
 # Application definition
