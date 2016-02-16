@@ -29,6 +29,7 @@ TEMPLATE_DIRS = {
     'grazing/templates/'
 }
 
+
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -41,7 +42,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
-    'grazing'
+    'leaflet',
+    'djgeojson',
+    'bakery',
+    'grazing' # this is our app
 )
 
 MIDDLEWARE_CLASSES = (
@@ -58,6 +62,13 @@ ROOT_URLCONF = 'rangeland.urls'
 
 WSGI_APPLICATION = 'rangeland.wsgi.application'
 
+LEAFLET_CONFIG = {
+    # conf here
+    'DEFAULT_CENTER': (37.09024, -95.712891),
+    'DEFAULT_ZOOM': 5,
+    'MIN_ZOOM': 3,
+    'MAX_ZOOM': 18,
+}
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
