@@ -11,6 +11,7 @@ class State(models.Model):
     def __str__(self):
         return self.name
 
+# not using NEPAType
 class NEPAType(models.Model):
     name = models.CharField(max_length=255)
     abbr = models.CharField(max_length=4, null=True)
@@ -60,6 +61,7 @@ class Operator(models.Model):
 
 class Allotment(models.Model):
 
+    # state = models.ForeignKey("State")
     field_office = models.ForeignKey("FieldOffice")
     allotment_number = models.CharField(max_length=11)
     allotment_unique = models.CharField(max_length=255)
@@ -81,7 +83,7 @@ class Allotment(models.Model):
 
 class Permit(models.Model):
 
-    field_office = models.ForeignKey("FieldOffice") # Is this really necessary if its already tied to allotment?
+    field_office = models.ForeignKey("FieldOffice")
     auth_no = models.ForeignKey("Authorization")
     pl_effect_dt = models.DateTimeField()
     pl_exp_dt = models.DateTimeField()

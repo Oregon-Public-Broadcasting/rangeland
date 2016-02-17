@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'django.contrib.humanize',
     # 'bakery', we might use this to bake out the app as static
     'grazing' # this is our app
 )
