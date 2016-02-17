@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
     url(r'^$', 'grazing.views.index', name='index'),
         url(r'^allotments/(?P<allotment_unique>.*)/$', 'grazing.views.allotment', name='allotment'),
+        url(r'^states/(?P<state_slug>.*)/$', 'grazing.views.state', name='state'),
     # url(r'^data/(?P<z>\d+)/(?P<x>\d+)/(?P<y>\d+).geojson$', TiledGeoJSONLayerView.as_view(model=Health), name='data'),
 
 

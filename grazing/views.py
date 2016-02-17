@@ -5,7 +5,16 @@ from django.db.models import Count
 from grazing.models import *
 
 def index(request):
-	return render(request, 'base.html')
+
+	states = State.objects.all().order_by('name')
+
+	return render(request, 'base.html', {'states': states})
+
+def state(request, state_slug):
+
+	state = State.objects.get(abbr=state_slug)
+
+	return render(request, 'state_detail.html', {'state': state})
 
 def allotment(request, allotment_unique):
 	allot = Allotment.objects.get(allotment_unique=allotment_unique)

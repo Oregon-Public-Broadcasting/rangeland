@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<a href="{% url "index" %}"> <<< HOME </a>
+<div class="row">
+  <div class="small-12 medium-3 large-3 columns end">
+    <h1> {{ state.name }} </h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="small-12 medium-12 large-12 columns end">
+    <div id="map"></div>
+  </div>
+</div>
+
+<script src="https://s3-us-west-2.amazonaws.com/opb-news-interactives/earthfix/rangeland/{{ state.abbr|lower }}.geojson"></script>
+<script type="text/javascript">
+
+state_centroids = {
+AZ:[33.7712,-111.3877],
+CA:[36.1700,-119.7462],
+CO:[39.0646,-105.3272],
+ID:[44.2394,-114.5103],
+MT:[46.9048,-110.3261],
+NM:[34.8375,-106.2371],
+NV:[38.4199,-117.1219],
+OR:[44.5672,-122.1269],
+WY:[42.7475,-107.2085],
+UT:[40.1135,-111.8535]
+}
+
+  var map = L.map('map').setView(state_centroids["{{ state.abbr }}"], 7);
+
+  // ESRI OPEN TILES
+    L.esri.basemapLayer('Gray').addTo(map);
+
+  // LAYER OPTIONS
+    // Topographic
+    // Streets
+    // National Geographic
+    // Oceans
+    // Gray
+    // Dark Gray
+    // Imagery
+    // Shaded Relief
+
+  // OPEN STREET MAP BASE TILE
+    // L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(map);
+
+  // MAP QUEST OPEN TILES
+    // L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png').addTo(map);
+    // L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png').addTo(map);
+
+  // STAMEN
+    // L.tileLayer('http://tile.stamen.com/toner/{z}/{x}/{y}.png').addTo(map);
+    // L.tileLayer('http://tile.stamen.com/terrain/{z}/{x}/{y}.png').addTo(map);
+    // L.tileLayer('http://tile.stamen.com/watercolor/{z}/{x}/{y}.png').addTo(map);
+
+
+    // MAKE THE TANK LAYER
+    function getColor(d) {
+        return d == 'ALL STANDARDS MET' ? '#a6d96a' :
+               d == 'NOT MET - LIVESTOCK' ? '#d7191c' :
+               d == 'NOT MET - NOT LIVESTOCK'  ? '#fdae61' :
+               d == 'NOT MET - NOTLIVESTOCK'  ? '#fdae61' :
+               d == 'NOT MET - INSUFFICIENT INFORMATION'  ? '#fdae61' :
+               d == 'NO DATA'  ? '#ccc' :
+               d == 'CLOSED'  ? '#ccc' :
+               d ==  'DETERMINATION NOT COMPLETE'  ? '#ccc' :
+                          '#CCC';
+    }
+
+    function allotment_style(feature) {
+
+        return {
+          weight: 0.25,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 1,
+          fillColor: getColor(feature.properties.LHS_CLASS)
+        };
+
+      }
+
+    function onEachFeature(feature, layer) {
+        // does this feature have a property named popupContent?
+        if (feature.properties && feature.properties.STALLOT) {
+            layer.bindPopup("Dig deeper on this allotment. <a href='/allotments/" + feature.properties.STALLOT + "'>Click here! </a>");
+        }
+    }
+
+  L.geoJson( allotment_boundaries, {
+    style: allotment_style,
+    onEachFeature: onEachFeature,
+  }).addTo(map);
+
+  // Disable drag and zoom handlers.
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable();
+
+  // Disable tap handler, if present.
+    if (map.tap) map.tap.disable();
+
+</script>
+
+{% endblock %}
