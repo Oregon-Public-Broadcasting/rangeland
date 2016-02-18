@@ -1,44 +1,109 @@
 {% extends "base.html" %}
 
+{% load humanize %}
 
 {% block content %}
 
 <div class="row">
+  <div class="small-5 columns">
 
-<a href="{% url "index" %}"> <<< HOME </a> 
+    <div id="map"></div>
 
-<div class="small-12 columns">
-  <h6><em>{{ allot.field_office.state.name|upper }}</em></h6>
-  <h3> THE {{ allot.allotment_name }} ALLOTMENT </h3>
-  <div id="allotment_map"></div>
-</div>
+    <script type="text/javascript">
+      var map = L.map('map').setView([{{boundary.geom.centroid.y }}, {{boundary.geom.centroid.x }}], 10);
 
-<h3> Land Health Status:</h3>
-{% for h in health %}
+      // ESRI OPEN TILES
+      L.esri.basemapLayer('Imagery').addTo(map);
 
-<p> {{ h.lhs }} </p>
+      var AllotmentBoundary = {{ boundary.geom.geojson|safe }}
 
-{% endfor %}
+      var AllotmentStyle = {
+            weight: 3,
+            opacity: 1,
+            color: 'white',
+            fillOpacity: 0,
+            // fillColor: getColor(feature.properties.LHS_CLASS)
+        }
 
-<h3> Ranchers who use this allotment: </h3>
-{% for o in operators %}
+      L.geoJson( AllotmentBoundary, {
+        style: AllotmentStyle
+      }).addTo(map);
 
-<p>{{ o }}</p>
-<br/>
-{% for a in o.auth_no.all %}
+    </script>
+  </div>
 
-  <p> Permits under Auth No {{ a }}: {{ a.permit_set.count }} <p/>
+  <div class="small-6 columns end">
+    <p>The <b> {{ allot.allotment_name|title }} allotment</b> spans {{ total_acres.total|floatformat|intcomma }} acres in  {{ allot.field_office.state }}</p>
 
-    <br />
-  <!-- {% for p in a.permit_set.all %}
 
-    {{ p.count }}
+    <p>
 
-  {% endfor %} -->
+    {% for h in health %}
 
-{% endfor %}
-<hr />
-{% endfor %}
+    As of 2013, the most recent year of available data, this grazing allotment
 
-</div>
+    {% if h.lhs %}
+
+      {% if h.lhs == 'NOT MET - LIVESTOCK' or h.lhs == 'NOT MET - NOT LIVESTOCK' or h.lhs == 'NOT MET - NOTLIVESTOCK' or h.lhs        == 'NOT MET - INSUFFICIENT INFORMATION' %}
+        did not meet rangeland health standards in its last evaluation.
+        {% if h.lhs == 'NOT MET - LIVESTOCK' %} Livestock grazing was cited as factor. {% else %} Current livesotck grazing was not cited as a factor.
+        {% endif %}
+      {% elif h.lhs == 'ALL STANDARDS MET' %}
+        was meeting rangeland health standards.
+      {% elif h.lhs == 'DETERMINATION NOT COMPLETE' %}
+        had not been evaluated for BLM's rangeland health standards.
+      {% endif %}
+
+    {% else %}
+      As of 2013, this grazing allotment hadn't been evaluated for the BLM's rangeland health standards.
+    {% endif %}
+
+
+    </p>
+
+    <p>
+    {% if allot.management_stat_text == 'IMPROVE CATEGORY' %}
+      The BLM says this allotment needs improvement.
+    {% else %}
+    {% endif %}
+    {% if allot.amp_text %}
+      Unlike many, this grazing allotment has an allotment management plan that sets long-term goals for rangeland improvement and outlines specific monitoring plans. It was implemented in {{ allot.amp_implement_date.year }}.
+    {% else %}
+    {% if allot.management_stat_text == 'IMPROVE CATEGORY' %}
+      However, it
+    {% else %}
+     The BLM
+    {% endif %}
+       has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+    {% endif %}
+    </p>
+
+    <!-- It hasn't been evaluated since  TK -->
+    {% endfor %}
+
+
+    <p>Of the {{ all_permits.total|apnumber }} permit{% if exempted_permits.total > 0 %}s{% else %}{% endif %} issued for this allotment, {% if exempted_permits.total > 0  and exempted_permits.total == all_permits.total %} all {% endif %} {% if exempted_permits.total > 0 %} {{ exempted_permits.total|apnumber }} {% else %} none {% endif %} were issued under a provision in federal law Congress passed to exempt them from environmental review.
+
+    <p> {{ ranchers.total|apnumber|title }} {% if ranchers.total > 1 %}ranches use{% else %} ranch uses {% endif %} this land. </p>
+
+    {% for o in operators %}
+      <p><b>{{ o|title }}, of {{o.city|title}}, {{o.st2}} </b> has the following permits on this allotment:
+        <ul>
+          {% for a in o.auth_no.all %}
+              {% for p in a.permit_set.all %}
+                {% if p.allotment.allotment_unique == allot.allotment_unique %}
+
+                <li>A {{ p.livestock_kind|lower }} permit for {{ p.livestock_number|floatformat|intcomma }} animals</li>
+
+                {% endif %}
+
+              {% endfor %}
+          </ul>
+          {% endfor %}
+      </ul>
+      <br />
+
+    {% endfor %}
+
+  </div>
 {% endblock %}
