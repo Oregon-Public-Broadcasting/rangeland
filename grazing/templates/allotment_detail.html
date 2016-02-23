@@ -1,109 +1,225 @@
 {% extends "base.html" %}
 
 {% load humanize %}
+{% load grazingtemplates %}
 
 {% block content %}
 
+<style>
+
+h3 {
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
+h4 {
+	color: #414243 !important;
+  line-height: 3em;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-top:1em;
+  font-size: 1.25em;
+}
+
+p {
+		font-size: 1.05em !important;
+  	font-family: Georgia,Times,Times New Roman,serif;
+}
+
+small {
+  color: #414243 !important;
+}
+
+.rancher {
+  font-size: 0.85em !important;
+}
+
+.map-container {
+  background-color: #f4f4f2;
+}
+
+.map-tease {
+  font-size: 0.8em !important;
+  font-family: Helvetica;
+}
+
+</style>
+
 <div class="row">
-  <div class="small-5 columns">
-
-    <div id="map"></div>
-
-    <script type="text/javascript">
-      var map = L.map('map').setView([{{boundary.geom.centroid.y }}, {{boundary.geom.centroid.x }}], 10);
-
-      // ESRI OPEN TILES
-      L.esri.basemapLayer('Imagery').addTo(map);
-
-      var AllotmentBoundary = {{ boundary.geom.geojson|safe }}
-
-      var AllotmentStyle = {
-            weight: 3,
-            opacity: 1,
-            color: 'white',
-            fillOpacity: 0,
-            // fillColor: getColor(feature.properties.LHS_CLASS)
-        }
-
-      L.geoJson( AllotmentBoundary, {
-        style: AllotmentStyle
-      }).addTo(map);
-
-    </script>
+  <div class="small-12 medium-11 medium-offset-1 columns">
+    {% if allot %}
+      {% for allot in allot %}
+        <h6><small><em>{% if allot.field_office.state.abbr == 'OR' %}OREGON/WASHINGTON {% elif allot.field_office.state.abbr == 'MT' %} MONTANA/DAKOTAS {% else %} {{ allot.field_office.state|upper }}{% endif %}</em></small></h6>
+      <h3>The {{ allot.allotment_name|title }} allotment spans {{ total_acres.total|floatformat|intcomma }} acres</h3>
+      {% endfor %}
+    {% else %}
+      {% if boundary.allotment_name %}
+        {% if boundary.allotment_name == 'N/A' %}
+        <h6><small><em></em></small></h6>
+        <h3>This allotment is unnamed</h3>
+        {% else %}
+        <h6><small><em></em></small></h6>
+        <h3>The {{ boundary.allotment_name|title }} allotment</h3>
+        {% endif %}
+      {% else %}
+        <h6><small><em></em></small></h6>
+        <h3>This allotment is unnamed</h3>
+      {% endif %}
+    {% endif %}
   </div>
+</div>
+<div class="row">
 
-  <div class="small-6 columns end">
-    <p>The <b> {{ allot.allotment_name|title }} allotment</b> spans {{ total_acres.total|floatformat|intcomma }} acres in  {{ allot.field_office.state }}</p>
 
+  <div class="small-12 medium-5 medium-offset-1 columns end">
+    <h5>Allotment health and management</h5>
 
     <p>
 
-    {% for h in health %}
 
-    As of 2013, the most recent year of available data, this grazing allotment
 
-    {% if h.lhs %}
-
-      {% if h.lhs == 'NOT MET - LIVESTOCK' or h.lhs == 'NOT MET - NOT LIVESTOCK' or h.lhs == 'NOT MET - NOTLIVESTOCK' or h.lhs        == 'NOT MET - INSUFFICIENT INFORMATION' %}
+      <!-- Rangeland Health Standards -->
+      As of 2013, the most recent year of available data, this grazing allotment
+      {% if boundary.lhs == 'NOT MET - LIVESTOCK' or boundary.lhs == 'NOT MET - NOT LIVESTOCK' or boundary.lhs == 'NOT MET - NOTLIVESTOCK' or boundary.lhs == 'NOT MET - INSUFFICIENT INFORMATION' %}
         did not meet rangeland health standards in its last evaluation.
-        {% if h.lhs == 'NOT MET - LIVESTOCK' %} Livestock grazing was cited as factor. {% else %} Current livesotck grazing was not cited as a factor.
+        {% if boundary.lhs == 'NOT MET - LIVESTOCK' %} Livestock grazing was cited as a factor. {% else %} Current livesotck grazing was not cited as a factor.
         {% endif %}
-      {% elif h.lhs == 'ALL STANDARDS MET' %}
+      {% elif boundary.lhs == 'ALL STANDARDS MET' %}
         was meeting rangeland health standards.
-      {% elif h.lhs == 'DETERMINATION NOT COMPLETE' %}
+      {% elif boundary.lhs == 'DETERMINATION NOT COMPLETE' or boundary.lhs == '----' %}
         had not been evaluated for BLM's rangeland health standards.
       {% endif %}
 
-    {% else %}
-      As of 2013, this grazing allotment hadn't been evaluated for the BLM's rangeland health standards.
-    {% endif %}
+
+
 
 
     </p>
 
     <p>
-    {% if allot.management_stat_text == 'IMPROVE CATEGORY' %}
-      The BLM says this allotment needs improvement.
+    <!-- Allotment Management Plans -->
+    {% if allot %}
+        {% if allot.management_stat_text == 'IMPROVE CATEGORY' %}
+          The BLM categorizes this allotment as needing to improve.
+        {% else %}
+        {% endif %}
+        {% if allot.amp_text %}
+          Unlike many, this grazing allotment has an allotment management plan that sets long-term goals for rangeland improvement and outlines specific monitoring plans. It was implemented in {{ allot.amp_implement_date.year }}.
+        {% else %}
+        {% if allot.management_stat_text == 'IMPROVE CATEGORY' %}
+          However, it
+        {% else %}
+         The BLM
+        {% endif %}
+           has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+        {% endif %}
     {% else %}
-    {% endif %}
-    {% if allot.amp_text %}
-      Unlike many, this grazing allotment has an allotment management plan that sets long-term goals for rangeland improvement and outlines specific monitoring plans. It was implemented in {{ allot.amp_implement_date.year }}.
-    {% else %}
-    {% if allot.management_stat_text == 'IMPROVE CATEGORY' %}
-      However, it
-    {% else %}
-     The BLM
-    {% endif %}
-       has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+      BLM data shows no record of an allotment management plan for this allotment.
     {% endif %}
     </p>
 
-    <!-- It hasn't been evaluated since  TK -->
-    {% endfor %}
+    <h5>Who uses this allotment</h5>
 
+{% if ranchers.total > 0 %}
+    <p> {{ ranchers.total|apnumber|title }} {% if ranchers.total > 1 %}ranches use{% else %} ranch uses {% endif %} this land.
+    <!-- Permit exemptions  -->
+    {% if all_permits.total == 1 %}
+      The one permit issued for this allotment was {% if exempted_permits.total > 0 %} {% else %} not {% endif %} renewed under a provision in federal law that exempts permits from environmental review.
+    {% else %}
+      Of the {{ all_permits.total|apnumber }} permits issued for this allotment, {% if exempted_permits.total > 0  and exempted_permits.total == all_permits.total and exempted_permits.total > 3 %} all {% endif %} {% if exempted_permits.total > 0 %} {{ exempted_permits.total|apnumber }} {% else %} none {% endif %} were renewed under a provision in federal law that exempts permits from environmental review.
+    {% endif %}
+    </p>
 
-    <p>Of the {{ all_permits.total|apnumber }} permit{% if exempted_permits.total > 0 %}s{% else %}{% endif %} issued for this allotment, {% if exempted_permits.total > 0  and exempted_permits.total == all_permits.total %} all {% endif %} {% if exempted_permits.total > 0 %} {{ exempted_permits.total|apnumber }} {% else %} none {% endif %} were issued under a provision in federal law Congress passed to exempt them from environmental review.
-
-    <p> {{ ranchers.total|apnumber|title }} {% if ranchers.total > 1 %}ranches use{% else %} ranch uses {% endif %} this land. </p>
-
-    {% for o in operators %}
-      <p><b>{{ o|title }}, of {{o.city|title}}, {{o.st2}} </b> has the following permits on this allotment:
+    <div class="row">
+      <div class="small-10 small-offset-1">
         <ul>
-          {% for a in o.auth_no.all %}
-              {% for p in a.permit_set.all %}
-                {% if p.allotment.allotment_unique == allot.allotment_unique %}
+          {% for o in operators %}
+          <li>
+            <b>{{ o|title }}</b> based in {{o.city|title}}, {{o.st2}} grazes up to
+              {% for a in o.auth_no.all %}
+                    {% for p in a.permit_set.all %}
+                    {% if p.allotment.allotment_unique == boundary.allotment_unique %}
 
-                <li>A {{ p.livestock_kind|lower }} permit for {{ p.livestock_number|floatformat|intcomma }} animals</li>
+                  {% if p.pl_exp_dt.year >= 2016 %}
 
-                {% endif %}
+                    {{ p.livestock_number|floatformat|intcomma }} {{ p.livestock_kind|lower }}
+                    {% if p.pd_end_dt.month == p.pd_beg_dt.month %}
+                      in {{ p.pd_end_dt.month|month_name }}
+                    {% else %}
+                      between {{ p.pd_beg_dt.month|month_name }} and {{ p.pd_end_dt.month|month_name }}{% endif %}{% if forloop.last %}{% else %}{% if forloop.revcounter = 2 %} and {% else %},{% endif %}{% endif %}
 
+
+                  {% else %}
+                  {% endif %}
+
+                    {% endif %}
+                  {% endfor %}
+
+                </li>
               {% endfor %}
-          </ul>
-          {% endfor %}
-      </ul>
-      <br />
 
-    {% endfor %}
+          {% if not forloop.last %}<hr />{% endif %}
+        {% endfor %}
+        <ul>
+      </div>
+    </div>
 
+    {% else %}
+    <p>There are no current permits in the BLM database for this allotment.</p>
+    {% endif %}
   </div>
+
+
+
+  <div class="small-12 medium-5 columns end map-container">
+    <div id="map"></div>
+    <h5>Explore from above</h5>
+    <p class="map-tease">Everything in the white border is an allotment managed by the the BLM. Zoom in to take a look through the land. Rangeland ecologists look for vegetation patterns, streamside erosion and other things when evaluating rangeland health.</p>
+
+  <script type="text/javascript">
+    var map = L.map('map').setView([{{boundary.geom.centroid.y }}, {{boundary.geom.centroid.x }}],
+
+    {% if boundary.allotment.public_acres > 100000 %}
+    9
+    {% elif boundary.allotment.public_acres > 100000 %}
+    10
+    {% elif boundary.allotment.public_acres > 10000 %}
+    11
+    {% elif boundary.allotment.public_acres > 1000 %}
+    12
+    {% else %}
+    13
+    {% endif %}
+
+    );
+
+    // ESRI OPEN TILES
+    L.esri.basemapLayer('Imagery').addTo(map);
+
+
+    var AllotmentBoundary = {{ boundary.geom.geojson|safe }}
+
+    var AllotmentStyle = {
+          weight: 3,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 0,
+          // fillColor: getColor(feature.properties.LHS_CLASS)
+      }
+
+    L.geoJson( AllotmentBoundary, {
+      style: AllotmentStyle
+    }).addTo(map);
+
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable()
+
+  </script>
+</div>
+</div>
 {% endblock %}
