@@ -1,3 +1,3 @@
-# Processing notes
+# BLM Grazing Policies and Rangeland Health
 
-See comments within Python notebook
+Explanation of project coming soon! 
