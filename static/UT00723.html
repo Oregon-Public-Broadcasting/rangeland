@@ -1,0 +1,246 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- &lt;link rel="stylesheet" href="css/style.css"  /&gt; -->
+<script type="text/javascript" src="http://opb-news-interactives.s3.amazonaws.com/lib/pym.js"></script>
+<!-- SWITCH FROM CDN TO OPB HOST BEFORE YOU PUSH? -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
+<!-- DON'T FORGET YOUR GEOGRAPHY JSON FILES  -->
+<!-- &lt;script src="js/yourgeography.geojson"&gt;&lt;/script&gt; -->
+<!-- Using Foundation, for now ... -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+<style type="text/css">
+
+     html {
+       padding: 0;
+       margin: 0;
+     }
+
+     body {
+       margin: 0;
+       padding: 0;
+     }
+
+     #map {
+       height: 400px;
+       width: 100%;
+       margin-bottom: 1.5em;
+       margin-top: 1.5em;
+      }
+
+     /*LEAFLET STYLE OVERRIDES*/
+
+     .leaflet-popup-content-wrapper {
+       background-color: #fff;
+       border-radius: 3px;
+     }
+
+     .leaflet-popup-tip{
+       background-color: #fff;
+     }
+
+     .leaflet-popup-content {
+       font-size: 1.125em;
+       color: #363636;
+     }
+
+     .leaflet-popup-content h4{
+       font-size: 20px;
+       line-height: 0;
+     }
+
+     .photo-box {
+       height: 150px;
+       width: 100%;
+       border: 2px solid #ccc;
+       margin-bottom: 1em;
+       overflow: hidden;
+     }
+
+  </style>
+</head>
+<body>
+<style>
+
+h3 {
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
+h4 {
+	color: #414243 !important;
+  line-height: 3em;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-top:1em;
+  font-size: 1.25em;
+}
+
+p {
+		font-size: 1.05em !important;
+  	font-family: Georgia,Times,Times New Roman,serif;
+}
+
+small {
+  color: #414243 !important;
+}
+
+.rancher {
+  font-size: 0.85em !important;
+}
+
+.map-container {
+  background-color: #f4f4f2;
+}
+
+.map-tease {
+  font-size: 0.8em !important;
+  font-family: Helvetica;
+}
+
+</style>
+<div class="row">
+<div class="small-12 medium-11 medium-offset-1 columns">
+<h6><small><em> UTAH</em></small></h6>
+<h3>The Lyman allotment spans 2,020 acres</h3>
+</div>
+</div>
+<div class="row">
+<div class="small-12 medium-5 medium-offset-1 columns end">
+<h5>Allotment health and management</h5>
+<p>
+<!-- Rangeland Health Standards -->
+      As of 2013, the most recent year of available data, this grazing allotment
+      
+        was meeting rangeland health standards.
+      
+
+
+
+
+
+    </p>
+<p>
+<!-- Allotment Management Plans -->
+    
+        
+        
+        
+        
+         The BLM
+        
+           has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+        
+    
+    </p>
+<h5>Who uses this allotment</h5>
+<p> Two ranches use this land.
+    <!-- Permit exemptions  -->
+    
+      Of the two permits issued for this allotment,   one  were renewed under a provision in federal law that exempts permits from environmental review.
+    
+    </p>
+<div class="row">
+<div class="small-10 small-offset-1">
+<ul>
+<li>
+<b>Russell Edwards</b> based in St. George, UT grazes up to
+              
+                    
+                    
+
+                  
+
+                    279 sheep
+                    
+                      between October and November
+                  
+
+                    
+                  
+
+                </li>
+<hr />
+<li>
+<b>Wood, Stanley And Jesse</b> based in Lyman, UT grazes up to
+              
+                    
+                    
+
+                  
+
+                    47 cattle
+                    
+                      in December
+                    ,
+                  
+
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+
+                </li>
+<ul>
+</ul></ul></div>
+</div>
+</div>
+<div class="small-12 medium-5 columns end map-container">
+<div id="map"></div>
+<h5>Explore from above</h5>
+<p class="map-tease">Everything in the white border is an allotment managed by the the BLM. Zoom in to take a look through the land. Rangeland ecologists look for vegetation patterns, streamside erosion and other things when evaluating rangeland health.</p>
+<script type="text/javascript">
+    var map = L.map('map').setView([38.3925749588, -111.571397497],
+
+    
+    12
+    
+
+    );
+
+    // ESRI OPEN TILES
+    L.esri.basemapLayer('Imagery').addTo(map);
+
+
+    var AllotmentBoundary = { "type": "MultiPolygon", "coordinates": [ [ [ [ -111.592797981335465, 38.407849817572412 ], [ -111.592799797263154, 38.40965224976997 ], [ -111.592774059980428, 38.411499881105826 ], [ -111.560683291529088, 38.411504281238315 ], [ -111.560408157532123, 38.396896775616604 ], [ -111.560681044318599, 38.396922514645347 ], [ -111.56069445250003, 38.374986633804888 ], [ -111.560843126340828, 38.367911287155714 ], [ -111.578944228880985, 38.367931636022178 ], [ -111.578950928606531, 38.374979197231795 ], [ -111.578947349133699, 38.37884547314713 ], [ -111.57441795404921, 38.378858687513187 ], [ -111.569895723148662, 38.378871701079561 ], [ -111.569912300473121, 38.382449476722471 ], [ -111.574406852445136, 38.382436597604631 ], [ -111.574396024976366, 38.38605057132142 ], [ -111.574370968666514, 38.389673615946123 ], [ -111.574360214533229, 38.393296588981485 ], [ -111.578911400749874, 38.393301280710084 ], [ -111.5835327952706, 38.393314460154421 ], [ -111.583521934626191, 38.396955463256319 ], [ -111.583553874000387, 38.400578209300782 ], [ -111.583585183038196, 38.404209968632287 ], [ -111.588179347374052, 38.404223097440202 ], [ -111.588190127698581, 38.407854963282865 ], [ -111.591743585625366, 38.407855137891346 ], [ -111.592797981335465, 38.407849817572412 ] ] ] ] }
+
+    var AllotmentStyle = {
+          weight: 3,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 0,
+          // fillColor: getColor(feature.properties.LHS_CLASS)
+      }
+
+    L.geoJson( AllotmentBoundary, {
+      style: AllotmentStyle
+    }).addTo(map);
+
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable()
+
+  </script>
+</div>
+</div>
+</body>
+</html>

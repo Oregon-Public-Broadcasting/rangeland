@@ -1,0 +1,236 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- &lt;link rel="stylesheet" href="css/style.css"  /&gt; -->
+<script type="text/javascript" src="http://opb-news-interactives.s3.amazonaws.com/lib/pym.js"></script>
+<!-- SWITCH FROM CDN TO OPB HOST BEFORE YOU PUSH? -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
+<!-- DON'T FORGET YOUR GEOGRAPHY JSON FILES  -->
+<!-- &lt;script src="js/yourgeography.geojson"&gt;&lt;/script&gt; -->
+<!-- Using Foundation, for now ... -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+<style type="text/css">
+
+     html {
+       padding: 0;
+       margin: 0;
+     }
+
+     body {
+       margin: 0;
+       padding: 0;
+     }
+
+     #map {
+       height: 400px;
+       width: 100%;
+       margin-bottom: 1.5em;
+       margin-top: 1.5em;
+      }
+
+     /*LEAFLET STYLE OVERRIDES*/
+
+     .leaflet-popup-content-wrapper {
+       background-color: #fff;
+       border-radius: 3px;
+     }
+
+     .leaflet-popup-tip{
+       background-color: #fff;
+     }
+
+     .leaflet-popup-content {
+       font-size: 1.125em;
+       color: #363636;
+     }
+
+     .leaflet-popup-content h4{
+       font-size: 20px;
+       line-height: 0;
+     }
+
+     .photo-box {
+       height: 150px;
+       width: 100%;
+       border: 2px solid #ccc;
+       margin-bottom: 1em;
+       overflow: hidden;
+     }
+
+  </style>
+</head>
+<body>
+<style>
+
+h3 {
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
+h4 {
+	color: #414243 !important;
+  line-height: 3em;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-top:1em;
+  font-size: 1.25em;
+}
+
+p {
+		font-size: 1.05em !important;
+  	font-family: Georgia,Times,Times New Roman,serif;
+}
+
+small {
+  color: #414243 !important;
+}
+
+.rancher {
+  font-size: 0.85em !important;
+}
+
+.map-container {
+  background-color: #f4f4f2;
+}
+
+.map-tease {
+  font-size: 0.8em !important;
+  font-family: Helvetica;
+}
+
+</style>
+<div class="row">
+<div class="small-12 medium-11 medium-offset-1 columns">
+<h6><small><em> COLORADO</em></small></h6>
+<h3>The Dry Creek Place allotment spans 100 acres</h3>
+</div>
+</div>
+<div class="row">
+<div class="small-12 medium-5 medium-offset-1 columns end">
+<h5>Allotment health and management</h5>
+<p>
+<!-- Rangeland Health Standards -->
+      As of 2013, the most recent year of available data, this grazing allotment
+      
+        was meeting rangeland health standards.
+      
+
+
+
+
+
+    </p>
+<p>
+<!-- Allotment Management Plans -->
+    
+        
+        
+        
+        
+         The BLM
+        
+           has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+        
+    
+    </p>
+<h5>Who uses this allotment</h5>
+<p> One  ranch uses  this land.
+    <!-- Permit exemptions  -->
+    
+      The one permit issued for this allotment was   renewed under a provision in federal law that exempts permits from environmental review.
+    
+    </p>
+<div class="row">
+<div class="small-10 small-offset-1">
+<ul>
+<li>
+<b>Burch, Bradley M. &amp; Jeanne L.</b> based in Olathe,, CO grazes up to
+              
+                    
+                    
+
+                  
+
+                    4 horses
+                    
+                      between March and May,
+                  
+
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+
+                  
+
+                    143 cattle
+                    
+                      between December and May
+                  
+
+                    
+                  
+
+                </li>
+<ul>
+</ul></ul></div>
+</div>
+</div>
+<div class="small-12 medium-5 columns end map-container">
+<div id="map"></div>
+<h5>Explore from above</h5>
+<p class="map-tease">Everything in the white border is an allotment managed by the the BLM. Zoom in to take a look through the land. Rangeland ecologists look for vegetation patterns, streamside erosion and other things when evaluating rangeland health.</p>
+<script type="text/javascript">
+    var map = L.map('map').setView([38.5502163006, -108.059679092],
+
+    
+    13
+    
+
+    );
+
+    // ESRI OPEN TILES
+    L.esri.basemapLayer('Imagery').addTo(map);
+
+
+    var AllotmentBoundary = { "type": "MultiPolygon", "coordinates": [ [ [ [ -108.059539812504937, 38.545736433314431 ], [ -108.060412666083181, 38.545686669911625 ], [ -108.060733643523776, 38.545759444959572 ], [ -108.060983169448235, 38.545986889901883 ], [ -108.061233060304374, 38.546187743726243 ], [ -108.061493899109138, 38.546432995236323 ], [ -108.061924432863734, 38.546827325678834 ], [ -108.062105489584113, 38.54703881141053 ], [ -108.062398463324499, 38.547454484241499 ], [ -108.062555694724509, 38.54774785608916 ], [ -108.062672867458303, 38.547990966899889 ], [ -108.062722887535543, 38.548094748913073 ], [ -108.062925218547235, 38.548431624451318 ], [ -108.063081919137588, 38.548761133259859 ], [ -108.063339419429113, 38.549240798334708 ], [ -108.063541757425142, 38.549550642741686 ], [ -108.063725805187985, 38.549903655591173 ], [ -108.063754959557713, 38.549959577433334 ], [ -108.063877480547731, 38.550226824367513 ], [ -108.064083998669602, 38.551113059935922 ], [ -108.064019084493125, 38.551627458119917 ], [ -108.063981334150384, 38.551926581569319 ], [ -108.063849637487309, 38.552326707265486 ], [ -108.0637310347105, 38.552583676747489 ], [ -108.063660311311622, 38.552736900883978 ], [ -108.063310048544935, 38.553169414698239 ], [ -108.062833154505839, 38.553632542608618 ], [ -108.06264669190837, 38.553853645772726 ], [ -108.062193586521943, 38.554252992715334 ], [ -108.061753077387692, 38.554570835934626 ], [ -108.061473780725706, 38.554821393795038 ], [ -108.061044949403339, 38.555165866546027 ], [ -108.060853407446601, 38.555256112913554 ], [ -108.059081067266135, 38.555253972214238 ], [ -108.059073660376512, 38.551617042726996 ], [ -108.054507595775434, 38.551606199543428 ], [ -108.054515940312356, 38.548380844827392 ], [ -108.054671977390697, 38.548322246237888 ], [ -108.055133472712242, 38.548148935147481 ], [ -108.055627513299299, 38.548082157899159 ], [ -108.055972873061179, 38.547974174807003 ], [ -108.055973974840384, 38.547973825590162 ], [ -108.056308414591015, 38.547838868987796 ], [ -108.056621136544976, 38.547659795819101 ], [ -108.05679543941126, 38.547492894604169 ], [ -108.057131838268475, 38.547222836474226 ], [ -108.057296188454202, 38.546975292355455 ], [ -108.057458776840889, 38.546827075988716 ], [ -108.057609238672029, 38.546741970093322 ], [ -108.057965740197929, 38.546678421354798 ], [ -108.058127516655375, 38.546584190422813 ], [ -108.058243769202747, 38.546482229575609 ], [ -108.058486633815576, 38.54634966161651 ], [ -108.058648338683568, 38.54629155891498 ], [ -108.058764956162534, 38.54614418066874 ], [ -108.059019131909537, 38.546029424515787 ], [ -108.059056973048754, 38.546003526593211 ], [ -108.059169969148826, 38.545926199503469 ], [ -108.059401499928441, 38.545794286325922 ], [ -108.059539812504937, 38.545736433314431 ] ] ] ] }
+
+    var AllotmentStyle = {
+          weight: 3,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 0,
+          // fillColor: getColor(feature.properties.LHS_CLASS)
+      }
+
+    L.geoJson( AllotmentBoundary, {
+      style: AllotmentStyle
+    }).addTo(map);
+
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable()
+
+  </script>
+</div>
+</div>
+</body>
+</html>

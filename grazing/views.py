@@ -33,8 +33,9 @@ def state(request, state_slug):
 	#total acres
 	acreage = State.objects.filter(abbr=state_slug).aggregate(total=Sum('fieldoffice__allotment__public_acres'))
 
-	#total livestock (thought about using aums ...)
-	livestock = Permit.objects.filter(field_office__state__abbr=state_slug).aggregate(total=Sum('livestock_number'))
+	#total livestock, using aums
+	# using total livestock will overcount because permit schedule lists twice, impossible to parse unique livestock count
+	livestock = Permit.objects.filter(field_office__state__abbr=state_slug).aggregate(total=Sum('aums'))
 
 #	State.objects.filter(abbr=state_slug).aggregate(total=Sum('fieldoffice__permit__livestock_number'))
 
@@ -57,9 +58,9 @@ def state(request, state_slug):
 	lhs_filter_categories = ['NO DATA', 'DETERMINATION NOT COMPLETE', '----']
 	lhs_acres_unk = Allotment.objects.filter(field_office__state__abbr=state_slug, health__lhs__in=lhs_filter_categories).aggregate(total=Sum('public_acres'))
 
-	allotment_count = Allotment.objects.filter(field_office__state__abbr=state_slug).aggregate(total=Count('id'))
-	allotments_meeting_standards = Allotment.objects.filter(field_office__state__abbr=state_slug, health__lhs='ALL STANDARDS MET').aggregate(total=Count('id'))
-	allotments_not_evaluated = Allotment.objects.filter(field_office__state__abbr=state_slug, health__lhs__in=lhs_filter_categories).aggregate(total=Count('id'))
+	allotment_count = Allotment.objects.filter(field_office__state__abbr=state_slug).aggregate(total=Count('id', distinct=True))
+	allotments_meeting_standards = Allotment.objects.filter(field_office__state__abbr=state_slug, health__lhs='ALL STANDARDS MET').aggregate(total=Count('id', distinct=True))
+	allotments_not_evaluated = Allotment.objects.filter(field_office__state__abbr=state_slug, health__lhs__in=lhs_filter_categories).aggregate(total=Count('id', distinct=True))
 
 	pct_meeting_standard = (allotments_meeting_standards['total'] / allotment_count['total']) * 100
 	pct_not_evaluated = (allotments_not_evaluated['total'] / allotment_count['total']) * 100

@@ -3,8 +3,11 @@ import time, datetime, urllib2
 from grazing.models import *
 from BeautifulSoup import BeautifulSoup
 
-allotments = Health.objects.all()
 
+allotments = Health.objects.all()
+allotments_count = allotments.count()
+
+counter = 0
 for a in allotments:
 
     try:
@@ -18,6 +21,7 @@ for a in allotments:
         html_file.write(html_str)
         html_file.close()
 
-        print "finished with {}".format(a.allotment_unique)
+        counter += 1
+        print "finished with {}, number {} out of {} total".format(a.allotment_unique, counter, allotments_count)
     except:
-            print "SOMETHING'S FUCKED UP WITH {}".format(a.allotment_unique)
+        print "SOMETHING'S FUCKED UP WITH {}".format(a.allotment_unique)

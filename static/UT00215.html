@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- &lt;link rel="stylesheet" href="css/style.css"  /&gt; -->
+<script type="text/javascript" src="http://opb-news-interactives.s3.amazonaws.com/lib/pym.js"></script>
+<!-- SWITCH FROM CDN TO OPB HOST BEFORE YOU PUSH? -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
+<!-- DON'T FORGET YOUR GEOGRAPHY JSON FILES  -->
+<!-- &lt;script src="js/yourgeography.geojson"&gt;&lt;/script&gt; -->
+<!-- Using Foundation, for now ... -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+<style type="text/css">
+
+     html {
+       padding: 0;
+       margin: 0;
+     }
+
+     body {
+       margin: 0;
+       padding: 0;
+     }
+
+     #map {
+       height: 400px;
+       width: 100%;
+       margin-bottom: 1.5em;
+       margin-top: 1.5em;
+      }
+
+     /*LEAFLET STYLE OVERRIDES*/
+
+     .leaflet-popup-content-wrapper {
+       background-color: #fff;
+       border-radius: 3px;
+     }
+
+     .leaflet-popup-tip{
+       background-color: #fff;
+     }
+
+     .leaflet-popup-content {
+       font-size: 1.125em;
+       color: #363636;
+     }
+
+     .leaflet-popup-content h4{
+       font-size: 20px;
+       line-height: 0;
+     }
+
+     .photo-box {
+       height: 150px;
+       width: 100%;
+       border: 2px solid #ccc;
+       margin-bottom: 1em;
+       overflow: hidden;
+     }
+
+  </style>
+</head>
+<body>
+<style>
+
+h3 {
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
+h4 {
+	color: #414243 !important;
+  line-height: 3em;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-top:1em;
+  font-size: 1.25em;
+}
+
+p {
+		font-size: 1.05em !important;
+  	font-family: Georgia,Times,Times New Roman,serif;
+}
+
+small {
+  color: #414243 !important;
+}
+
+.rancher {
+  font-size: 0.85em !important;
+}
+
+.map-container {
+  background-color: #f4f4f2;
+}
+
+.map-tease {
+  font-size: 0.8em !important;
+  font-family: Helvetica;
+}
+
+</style>
+<div class="row">
+<div class="small-12 medium-11 medium-offset-1 columns">
+<h6><small><em> UTAH</em></small></h6>
+<h3>The Salls Meadow allotment spans 6,100 acres</h3>
+</div>
+</div>
+<div class="row">
+<div class="small-12 medium-5 medium-offset-1 columns end">
+<h5>Allotment health and management</h5>
+<p>
+<!-- Rangeland Health Standards -->
+      As of 2013, the most recent year of available data, this grazing allotment
+      
+        was meeting rangeland health standards.
+      
+
+
+
+
+
+    </p>
+<p>
+<!-- Allotment Management Plans -->
+    
+        
+        
+        
+        
+         The BLM
+        
+           has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+        
+    
+    </p>
+<h5>Who uses this allotment</h5>
+<p> Two ranches use this land.
+    <!-- Permit exemptions  -->
+    
+      Of the two permits issued for this allotment,   none  were renewed under a provision in federal law that exempts permits from environmental review.
+    
+    </p>
+<div class="row">
+<div class="small-10 small-offset-1">
+<ul>
+<li>
+<b>Kathy Quarnberg</b> based in Annabella, UT grazes up to
+              
+                    
+                    
+
+                  
+
+                    150 sheep
+                    
+                      between April and June
+                  
+
+                    
+                  
+
+                </li>
+<hr />
+<li>
+<b>Rickenbach Family Llc</b> based in Salina, UT grazes up to
+              
+                    
+                    
+
+                  
+
+                    22 cattle
+                    
+                      between May and June,
+                  
+
+                    
+                  
+                    
+
+                  
+
+                    22 cattle
+                    
+                      in October
+                    ,
+                  
+
+                    
+                  
+                    
+                  
+                    
+                  
+
+                </li>
+<ul>
+</ul></ul></div>
+</div>
+</div>
+<div class="small-12 medium-5 columns end map-container">
+<div id="map"></div>
+<h5>Explore from above</h5>
+<p class="map-tease">Everything in the white border is an allotment managed by the the BLM. Zoom in to take a look through the land. Rangeland ecologists look for vegetation patterns, streamside erosion and other things when evaluating rangeland health.</p>
+<script type="text/javascript">
+    var map = L.map('map').setView([38.7113802948, -112.029145779],
+
+    
+    12
+    
+
+    );
+
+    // ESRI OPEN TILES
+    L.esri.basemapLayer('Imagery').addTo(map);
+
+
+    var AllotmentBoundary = { "type": "MultiPolygon", "coordinates": [ [ [ [ -112.083772809253077, 38.691477882663648 ], [ -112.06994454264516, 38.691614178512673 ], [ -112.069888922875549, 38.698769659955175 ], [ -112.056052133630175, 38.698913399361793 ], [ -112.056010098396499, 38.702401159120278 ], [ -112.046770478498132, 38.702448142756857 ], [ -112.046748923087293, 38.706188019628932 ], [ -112.032980651936342, 38.706301387644999 ], [ -112.032771872635337, 38.720685228596892 ], [ -112.037441752425167, 38.720661939324444 ], [ -112.037482799375155, 38.724338171423419 ], [ -112.032918156086694, 38.724396577943565 ], [ -112.033320682648963, 38.73519751849517 ], [ -112.028215711824458, 38.735233486085868 ], [ -112.028214089712108, 38.738874035205882 ], [ -112.023585195759296, 38.738878578517259 ], [ -112.023720028389832, 38.749708902175605 ], [ -112.018963132488309, 38.74996669930141 ], [ -112.019449998414899, 38.756982300183843 ], [ -112.014834240254359, 38.757184639925946 ], [ -112.015013900107334, 38.760976852183042 ], [ -112.009737877625525, 38.7611036126657 ], [ -112.009205683350231, 38.749965656889174 ], [ -112.000778884905444, 38.74997045512891 ], [ -112.000758101263855, 38.749970479574053 ], [ -111.995896777298043, 38.749976126410743 ], [ -111.995869637909578, 38.735423206876717 ], [ -111.995842594555796, 38.728313554909079 ], [ -111.995835910545026, 38.720960421960903 ], [ -111.996068593740247, 38.706161915668446 ], [ -112.000756246922279, 38.7062116773253 ], [ -112.00077236328049, 38.706211855425799 ], [ -112.013786470934193, 38.706234984058689 ], [ -112.01408954053413, 38.691643060493227 ], [ -112.032509163774264, 38.691689214739853 ], [ -112.032521730343063, 38.677144831811972 ], [ -112.069746777643985, 38.677106348113902 ], [ -112.083583458632134, 38.684369702645029 ], [ -112.083772809253077, 38.691477882663648 ] ] ] ] }
+
+    var AllotmentStyle = {
+          weight: 3,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 0,
+          // fillColor: getColor(feature.properties.LHS_CLASS)
+      }
+
+    L.geoJson( AllotmentBoundary, {
+      style: AllotmentStyle
+    }).addTo(map);
+
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable()
+
+  </script>
+</div>
+</div>
+</body>
+</html>

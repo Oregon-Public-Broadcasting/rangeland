@@ -1,0 +1,279 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- &lt;link rel="stylesheet" href="css/style.css"  /&gt; -->
+<script type="text/javascript" src="http://opb-news-interactives.s3.amazonaws.com/lib/pym.js"></script>
+<!-- SWITCH FROM CDN TO OPB HOST BEFORE YOU PUSH? -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
+<!-- DON'T FORGET YOUR GEOGRAPHY JSON FILES  -->
+<!-- &lt;script src="js/yourgeography.geojson"&gt;&lt;/script&gt; -->
+<!-- Using Foundation, for now ... -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+<style type="text/css">
+
+     html {
+       padding: 0;
+       margin: 0;
+     }
+
+     body {
+       margin: 0;
+       padding: 0;
+     }
+
+     #map {
+       height: 400px;
+       width: 100%;
+       margin-bottom: 1.5em;
+       margin-top: 1.5em;
+      }
+
+     /*LEAFLET STYLE OVERRIDES*/
+
+     .leaflet-popup-content-wrapper {
+       background-color: #fff;
+       border-radius: 3px;
+     }
+
+     .leaflet-popup-tip{
+       background-color: #fff;
+     }
+
+     .leaflet-popup-content {
+       font-size: 1.125em;
+       color: #363636;
+     }
+
+     .leaflet-popup-content h4{
+       font-size: 20px;
+       line-height: 0;
+     }
+
+     .photo-box {
+       height: 150px;
+       width: 100%;
+       border: 2px solid #ccc;
+       margin-bottom: 1em;
+       overflow: hidden;
+     }
+
+  </style>
+</head>
+<body>
+<style>
+
+h3 {
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
+h4 {
+	color: #414243 !important;
+  line-height: 3em;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-top:1em;
+  font-size: 1.25em;
+}
+
+p {
+		font-size: 1.05em !important;
+  	font-family: Georgia,Times,Times New Roman,serif;
+}
+
+small {
+  color: #414243 !important;
+}
+
+.rancher {
+  font-size: 0.85em !important;
+}
+
+.map-container {
+  background-color: #f4f4f2;
+}
+
+.map-tease {
+  font-size: 0.8em !important;
+  font-family: Helvetica;
+}
+
+</style>
+<div class="row">
+<div class="small-12 medium-11 medium-offset-1 columns">
+<h6><small><em> WYOMING</em></small></h6>
+<h3>The Red Canyon Com allotment spans 6,345 acres</h3>
+</div>
+</div>
+<div class="row">
+<div class="small-12 medium-5 medium-offset-1 columns end">
+<h5>Allotment health and management</h5>
+<p>
+<!-- Rangeland Health Standards -->
+      As of 2013, the most recent year of available data, this grazing allotment
+      
+        was meeting rangeland health standards.
+      
+
+
+
+
+
+    </p>
+<p>
+<!-- Allotment Management Plans -->
+    
+        
+        
+        
+        
+         The BLM
+        
+           has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+        
+    
+    </p>
+<h5>Who uses this allotment</h5>
+<p> Two ranches use this land.
+    <!-- Permit exemptions  -->
+    
+      Of the two permits issued for this allotment,   one  were renewed under a provision in federal law that exempts permits from environmental review.
+    
+    </p>
+<div class="row">
+<div class="small-10 small-offset-1">
+<ul>
+<li>
+<b>Beth A. Bray Living Trust</b> based in Big Piney, WY grazes up to
+              
+                    
+                    
+                  
+                    
+                  
+                    
+
+                  
+
+                    166 cattle
+                    
+                      between July and September,
+                  
+
+                    
+                  
+                    
+
+                  
+
+                    50 cattle
+                    
+                      in September
+                     and 
+                  
+
+                    
+                  
+                    
+                  
+
+                </li>
+<hr />
+<li>
+<b>John C Budd Ranches Inc</b> based in Big Piney, WY grazes up to
+              
+                    
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+
+                  
+
+                    99 cattle
+                    
+                      in September
+                    ,
+                  
+
+                    
+                  
+                    
+
+                  
+
+                    310 cattle
+                    
+                      between July and September,
+                  
+
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+
+                </li>
+<ul>
+</ul></ul></div>
+</div>
+</div>
+<div class="small-12 medium-5 columns end map-container">
+<div id="map"></div>
+<h5>Explore from above</h5>
+<p class="map-tease">Everything in the white border is an allotment managed by the the BLM. Zoom in to take a look through the land. Rangeland ecologists look for vegetation patterns, streamside erosion and other things when evaluating rangeland health.</p>
+<script type="text/javascript">
+    var map = L.map('map').setView([42.6657131149, -110.440401884],
+
+    
+    12
+    
+
+    );
+
+    // ESRI OPEN TILES
+    L.esri.basemapLayer('Imagery').addTo(map);
+
+
+    var AllotmentBoundary = { "type": "MultiPolygon", "coordinates": [ [ [ [ -110.377203156536169, 42.672498919319771 ], [ -110.372265890125405, 42.668881678679227 ], [ -110.382077186757542, 42.668908779653741 ], [ -110.391857974058524, 42.668936682081124 ], [ -110.396748737005822, 42.668950860285619 ], [ -110.396727291598353, 42.665364263424841 ], [ -110.401625957323247, 42.665403312854302 ], [ -110.411423431951974, 42.665481052020013 ], [ -110.416341119519373, 42.661924255580061 ], [ -110.416379713220891, 42.654733103381162 ], [ -110.421315837692489, 42.65118383780284 ], [ -110.426245541812108, 42.647634326026534 ], [ -110.431175932142864, 42.644081810985313 ], [ -110.441013315274603, 42.644169738553039 ], [ -110.441026080897004, 42.640563039023405 ], [ -110.455783877233756, 42.640672818836087 ], [ -110.460705648892343, 42.640627411913734 ], [ -110.460716151589494, 42.637010707321075 ], [ -110.455793691973625, 42.637041878418145 ], [ -110.45579603696487, 42.633469976602832 ], [ -110.465639218842583, 42.63697931796338 ], [ -110.470557697386184, 42.640509343438694 ], [ -110.475323405775185, 42.640438452415658 ], [ -110.475155481354847, 42.659177319234594 ], [ -110.474993160119055, 42.677318990297664 ], [ -110.474945272010771, 42.683729377404866 ], [ -110.455662821208435, 42.683639363266522 ], [ -110.445841917620456, 42.687473851717037 ], [ -110.436007277587208, 42.687178297263983 ], [ -110.416488967462286, 42.686943728297734 ], [ -110.416530609826978, 42.690527796828526 ], [ -110.40168887921746, 42.690578323270202 ], [ -110.401696750565549, 42.68696082595519 ], [ -110.406609437347427, 42.679742942951584 ], [ -110.401668909251185, 42.672565244332269 ], [ -110.377203156536169, 42.672498919319771 ] ] ] ] }
+
+    var AllotmentStyle = {
+          weight: 3,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 0,
+          // fillColor: getColor(feature.properties.LHS_CLASS)
+      }
+
+    L.geoJson( AllotmentBoundary, {
+      style: AllotmentStyle
+    }).addTo(map);
+
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable()
+
+  </script>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- &lt;link rel="stylesheet" href="css/style.css"  /&gt; -->
+<script type="text/javascript" src="http://opb-news-interactives.s3.amazonaws.com/lib/pym.js"></script>
+<!-- SWITCH FROM CDN TO OPB HOST BEFORE YOU PUSH? -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
+<!-- DON'T FORGET YOUR GEOGRAPHY JSON FILES  -->
+<!-- &lt;script src="js/yourgeography.geojson"&gt;&lt;/script&gt; -->
+<!-- Using Foundation, for now ... -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+<style type="text/css">
+
+     html {
+       padding: 0;
+       margin: 0;
+     }
+
+     body {
+       margin: 0;
+       padding: 0;
+     }
+
+     #map {
+       height: 400px;
+       width: 100%;
+       margin-bottom: 1.5em;
+       margin-top: 1.5em;
+      }
+
+     /*LEAFLET STYLE OVERRIDES*/
+
+     .leaflet-popup-content-wrapper {
+       background-color: #fff;
+       border-radius: 3px;
+     }
+
+     .leaflet-popup-tip{
+       background-color: #fff;
+     }
+
+     .leaflet-popup-content {
+       font-size: 1.125em;
+       color: #363636;
+     }
+
+     .leaflet-popup-content h4{
+       font-size: 20px;
+       line-height: 0;
+     }
+
+     .photo-box {
+       height: 150px;
+       width: 100%;
+       border: 2px solid #ccc;
+       margin-bottom: 1em;
+       overflow: hidden;
+     }
+
+  </style>
+</head>
+<body>
+<style>
+
+h3 {
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
+h4 {
+	color: #414243 !important;
+  line-height: 3em;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-top:1em;
+  font-size: 1.25em;
+}
+
+p {
+		font-size: 1.05em !important;
+  	font-family: Georgia,Times,Times New Roman,serif;
+}
+
+small {
+  color: #414243 !important;
+}
+
+.rancher {
+  font-size: 0.85em !important;
+}
+
+.map-container {
+  background-color: #f4f4f2;
+}
+
+.map-tease {
+  font-size: 0.8em !important;
+  font-family: Helvetica;
+}
+
+</style>
+<div class="row">
+<div class="small-12 medium-11 medium-offset-1 columns">
+<h6><small><em> WYOMING</em></small></h6>
+<h3>The Potato Ridge allotment spans 8,600 acres</h3>
+</div>
+</div>
+<div class="row">
+<div class="small-12 medium-5 medium-offset-1 columns end">
+<h5>Allotment health and management</h5>
+<p>
+<!-- Rangeland Health Standards -->
+      As of 2013, the most recent year of available data, this grazing allotment
+      
+        did not meet rangeland health standards in its last evaluation.
+         Current livesotck grazing was not cited as a factor.
+        
+      
+
+
+
+
+
+    </p>
+<p>
+<!-- Allotment Management Plans -->
+    
+        
+        
+        
+        
+         The BLM
+        
+           has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+        
+    
+    </p>
+<h5>Who uses this allotment</h5>
+<p> Two ranches use this land.
+    <!-- Permit exemptions  -->
+    
+      Of the two permits issued for this allotment,   none  were renewed under a provision in federal law that exempts permits from environmental review.
+    
+    </p>
+<div class="row">
+<div class="small-10 small-offset-1">
+<ul>
+<li>
+<b>Flitner Ranch</b> based in Greybull, WY grazes up to
+              
+                    
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+
+                </li>
+
+
+              
+                    
+                    
+
+                  
+
+                    64 cattle
+                    
+                      between May and June
+                  
+
+                    
+                  
+
+                
+<hr />
+<li>
+<b>Flitner Limited Partnership</b> based in Greybull, WY grazes up to
+              
+                    
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+
+                </li>
+              
+                    
+                    
+
+                  
+
+                    149 cattle
+                    
+                      between May and June
+                  
+
+                    
+                  
+
+                
+<ul>
+</ul></ul></div>
+</div>
+</div>
+<div class="small-12 medium-5 columns end map-container">
+<div id="map"></div>
+<h5>Explore from above</h5>
+<p class="map-tease">Everything in the white border is an allotment managed by the the BLM. Zoom in to take a look through the land. Rangeland ecologists look for vegetation patterns, streamside erosion and other things when evaluating rangeland health.</p>
+<script type="text/javascript">
+    var map = L.map('map').setView([44.4286607222, -107.879804363],
+
+    
+    12
+    
+
+    );
+
+    // ESRI OPEN TILES
+    L.esri.basemapLayer('Imagery').addTo(map);
+
+
+    var AllotmentBoundary = { "type": "MultiPolygon", "coordinates": [ [ [ [ -107.840919025045721, 44.456563312102148 ], [ -107.841491297194196, 44.454896150802242 ], [ -107.838797913254652, 44.453515453840538 ], [ -107.838523355465483, 44.45127625087536 ], [ -107.844108330105172, 44.448186194994179 ], [ -107.844726215214152, 44.446896806019197 ], [ -107.851501464098945, 44.442711925591972 ], [ -107.851318458748395, 44.442281025159716 ], [ -107.851936335126908, 44.4422580414519 ], [ -107.864479667020944, 44.429589387848559 ], [ -107.863236088314025, 44.428601290959911 ], [ -107.86251118918986, 44.421445004572355 ], [ -107.850326527458449, 44.41386521416581 ], [ -107.848976016802268, 44.407628068305598 ], [ -107.842246534533288, 44.394036445012162 ], [ -107.842193167212443, 44.392731880818658 ], [ -107.875634294410602, 44.392742914325396 ], [ -107.882646060891787, 44.392677947766401 ], [ -107.882569571922502, 44.385472100521916 ], [ -107.888444544974973, 44.385468173578268 ], [ -107.888864211100795, 44.392712321182138 ], [ -107.90298688498423, 44.39273490678265 ], [ -107.902979329677422, 44.394631014657421 ], [ -107.902773249822772, 44.407166043920576 ], [ -107.923282092624063, 44.418919045673043 ], [ -107.92312949183966, 44.428863895055848 ], [ -107.902826816197233, 44.42896324725308 ], [ -107.903223594649916, 44.45826030699854 ], [ -107.895685511213188, 44.468144184863313 ], [ -107.890855817564628, 44.474862027734183 ], [ -107.890070046449267, 44.47420588417193 ], [ -107.88957414279021, 44.473885472462655 ], [ -107.886293374342443, 44.472500633789032 ], [ -107.885438812743459, 44.472199429007006 ], [ -107.884645287267602, 44.471848338596402 ], [ -107.882501223198204, 44.470662113520902 ], [ -107.881372051427519, 44.47019651664727 ], [ -107.880609159254817, 44.469796132530533 ], [ -107.878709370634411, 44.469136210441746 ], [ -107.877114603736203, 44.46844961866131 ], [ -107.87619920506765, 44.468205535281641 ], [ -107.875642153536063, 44.468029999679814 ], [ -107.875199606721438, 44.46744640766665 ], [ -107.874497696543315, 44.466939011280729 ], [ -107.872826718303173, 44.466221684924193 ], [ -107.871728101261837, 44.465889817155904 ], [ -107.870858271901582, 44.465439889642788 ], [ -107.869919742854179, 44.465027955178378 ], [ -107.868767685156413, 44.464661619705559 ], [ -107.868279328073783, 44.464348765049124 ], [ -107.867981838959366, 44.464257315629538 ], [ -107.866082025893789, 44.463841583431623 ], [ -107.864922271456393, 44.463402867526057 ], [ -107.863899904170779, 44.463151106613601 ], [ -107.863076005558369, 44.462968094278764 ], [ -107.862435051183496, 44.4628801527424 ], [ -107.862106867652969, 44.462781135793243 ], [ -107.86148123866009, 44.462498685703103 ], [ -107.860977713343075, 44.462399708913935 ], [ -107.859657783607574, 44.462052503540882 ], [ -107.8585819128065, 44.461693969573005 ], [ -107.855797096908049, 44.461072038786682 ], [ -107.854461983223317, 44.460553376664656 ], [ -107.853866779749538, 44.46037799646443 ], [ -107.853241201393146, 44.460301652419986 ], [ -107.852714660938844, 44.460053680510512 ], [ -107.852340826034009, 44.459988871099242 ], [ -107.85193651497363, 44.459862791589401 ], [ -107.851310803914799, 44.459565379302695 ], [ -107.850135902195987, 44.459294577340764 ], [ -107.849861248372136, 44.459164729781079 ], [ -107.848869374702943, 44.458943729636061 ], [ -107.847740064991598, 44.458569765520835 ], [ -107.845306238230833, 44.457944160973241 ], [ -107.844535581221265, 44.457665814181098 ], [ -107.843330185886046, 44.457352793646784 ], [ -107.84260527628534, 44.457062983811142 ], [ -107.842086430824608, 44.456753994985363 ], [ -107.84152181700189, 44.456548136883441 ], [ -107.840919025045721, 44.456563312102148 ] ] ] ] }
+
+    var AllotmentStyle = {
+          weight: 3,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 0,
+          // fillColor: getColor(feature.properties.LHS_CLASS)
+      }
+
+    L.geoJson( AllotmentBoundary, {
+      style: AllotmentStyle
+    }).addTo(map);
+
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable()
+
+  </script>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- &lt;link rel="stylesheet" href="css/style.css"  /&gt; -->
+<script type="text/javascript" src="http://opb-news-interactives.s3.amazonaws.com/lib/pym.js"></script>
+<!-- SWITCH FROM CDN TO OPB HOST BEFORE YOU PUSH? -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
+<!-- DON'T FORGET YOUR GEOGRAPHY JSON FILES  -->
+<!-- &lt;script src="js/yourgeography.geojson"&gt;&lt;/script&gt; -->
+<!-- Using Foundation, for now ... -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+<style type="text/css">
+
+     html {
+       padding: 0;
+       margin: 0;
+     }
+
+     body {
+       margin: 0;
+       padding: 0;
+     }
+
+     #map {
+       height: 400px;
+       width: 100%;
+       margin-bottom: 1.5em;
+       margin-top: 1.5em;
+      }
+
+     /*LEAFLET STYLE OVERRIDES*/
+
+     .leaflet-popup-content-wrapper {
+       background-color: #fff;
+       border-radius: 3px;
+     }
+
+     .leaflet-popup-tip{
+       background-color: #fff;
+     }
+
+     .leaflet-popup-content {
+       font-size: 1.125em;
+       color: #363636;
+     }
+
+     .leaflet-popup-content h4{
+       font-size: 20px;
+       line-height: 0;
+     }
+
+     .photo-box {
+       height: 150px;
+       width: 100%;
+       border: 2px solid #ccc;
+       margin-bottom: 1em;
+       overflow: hidden;
+     }
+
+  </style>
+</head>
+<body>
+<style>
+
+h3 {
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
+h4 {
+	color: #414243 !important;
+  line-height: 3em;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-top:1em;
+  font-size: 1.25em;
+}
+
+p {
+		font-size: 1.05em !important;
+  	font-family: Georgia,Times,Times New Roman,serif;
+}
+
+small {
+  color: #414243 !important;
+}
+
+.rancher {
+  font-size: 0.85em !important;
+}
+
+.map-container {
+  background-color: #f4f4f2;
+}
+
+.map-tease {
+  font-size: 0.8em !important;
+  font-family: Helvetica;
+}
+
+</style>
+<div class="row">
+<div class="small-12 medium-11 medium-offset-1 columns">
+<h6><small><em> UTAH</em></small></h6>
+<h3>The Graveyard Hollow allotment spans 1,206 acres</h3>
+</div>
+</div>
+<div class="row">
+<div class="small-12 medium-5 medium-offset-1 columns end">
+<h5>Allotment health and management</h5>
+<p>
+<!-- Rangeland Health Standards -->
+      As of 2013, the most recent year of available data, this grazing allotment
+      
+        was meeting rangeland health standards.
+      
+
+
+
+
+
+    </p>
+<p>
+<!-- Allotment Management Plans -->
+    
+        
+        
+        
+        
+         The BLM
+        
+           has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+        
+    
+    </p>
+<h5>Who uses this allotment</h5>
+<p> Two ranches use this land.
+    <!-- Permit exemptions  -->
+    
+      Of the two permits issued for this allotment,   two  were renewed under a provision in federal law that exempts permits from environmental review.
+    
+    </p>
+<div class="row">
+<div class="small-10 small-offset-1">
+<ul>
+<li>
+<b>Prince Enterprises Llc</b> based in New Harmony, UT grazes up to
+              
+                    
+                    
+
+                  
+
+                    45 sheep
+                    
+                      between December and February
+                  
+
+                    
+                  
+
+                </li>
+<hr />
+<li>
+<b>Delin Roundy</b> based in Panguitch, UT grazes up to
+              
+                    
+                    
+
+                  
+
+                    11 cattle
+                    
+                      between October and February
+                  
+
+                    
+                  
+
+                </li>
+<ul>
+</ul></ul></div>
+</div>
+</div>
+<div class="small-12 medium-5 columns end map-container">
+<div id="map"></div>
+<h5>Explore from above</h5>
+<p class="map-tease">Everything in the white border is an allotment managed by the the BLM. Zoom in to take a look through the land. Rangeland ecologists look for vegetation patterns, streamside erosion and other things when evaluating rangeland health.</p>
+<script type="text/javascript">
+    var map = L.map('map').setView([37.800475787, -112.411940086],
+
+    
+    12
+    
+
+    );
+
+    // ESRI OPEN TILES
+    L.esri.basemapLayer('Imagery').addTo(map);
+
+
+    var AllotmentBoundary = { "type": "MultiPolygon", "coordinates": [ [ [ [ -112.424599345155485, 37.789189207989907 ], [ -112.423874346504505, 37.797108819578774 ], [ -112.423634074826865, 37.799736653767319 ], [ -112.423297316276276, 37.803422377580553 ], [ -112.423281233093718, 37.80707944815029 ], [ -112.418710998843309, 37.807071534896252 ], [ -112.418666929421377, 37.810724427086221 ], [ -112.415974837584159, 37.810718546274295 ], [ -112.414068689724687, 37.810712174812586 ], [ -112.414041847170566, 37.814349086839066 ], [ -112.409521484580267, 37.814317690496942 ], [ -112.409486479081991, 37.817947946449998 ], [ -112.405820540150017, 37.817919691313669 ], [ -112.404959423750498, 37.817911942191522 ], [ -112.40500050038392, 37.814290643651006 ], [ -112.405042251005867, 37.810667062978354 ], [ -112.405084513230534, 37.806996158182621 ], [ -112.401712059641639, 37.806991314544753 ], [ -112.400542345539378, 37.806989467187577 ], [ -112.400552785377457, 37.805982175593883 ], [ -112.400581195915279, 37.803332129466909 ], [ -112.400609262474475, 37.802750468623138 ], [ -112.400756057528596, 37.799715962668223 ], [ -112.400775453033091, 37.799314674079845 ], [ -112.400799454707993, 37.79881869010093 ], [ -112.400812717964442, 37.798543641661986 ], [ -112.400929153850612, 37.796138136388876 ], [ -112.400995653471583, 37.794753893129872 ], [ -112.401035478162527, 37.793931017722883 ], [ -112.401102967813316, 37.792524239499812 ], [ -112.401278114038377, 37.788905820252332 ], [ -112.402382323787734, 37.788874645663128 ], [ -112.405737134940765, 37.788778303715155 ], [ -112.407987191566036, 37.788778452132284 ], [ -112.410178663570505, 37.7887770046285 ], [ -112.413478177979485, 37.788777989419984 ], [ -112.414620581577111, 37.788777786874213 ], [ -112.419609771297033, 37.788983601324126 ], [ -112.423449627210701, 37.789142271497532 ], [ -112.424599345155485, 37.789189207989907 ] ] ] ] }
+
+    var AllotmentStyle = {
+          weight: 3,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 0,
+          // fillColor: getColor(feature.properties.LHS_CLASS)
+      }
+
+    L.geoJson( AllotmentBoundary, {
+      style: AllotmentStyle
+    }).addTo(map);
+
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable()
+
+  </script>
+</div>
+</div>
+</body>
+</html>

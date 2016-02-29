@@ -1,0 +1,255 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- &lt;link rel="stylesheet" href="css/style.css"  /&gt; -->
+<script type="text/javascript" src="http://opb-news-interactives.s3.amazonaws.com/lib/pym.js"></script>
+<!-- SWITCH FROM CDN TO OPB HOST BEFORE YOU PUSH? -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
+<!-- DON'T FORGET YOUR GEOGRAPHY JSON FILES  -->
+<!-- &lt;script src="js/yourgeography.geojson"&gt;&lt;/script&gt; -->
+<!-- Using Foundation, for now ... -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+<style type="text/css">
+
+     html {
+       padding: 0;
+       margin: 0;
+     }
+
+     body {
+       margin: 0;
+       padding: 0;
+     }
+
+     #map {
+       height: 400px;
+       width: 100%;
+       margin-bottom: 1.5em;
+       margin-top: 1.5em;
+      }
+
+     /*LEAFLET STYLE OVERRIDES*/
+
+     .leaflet-popup-content-wrapper {
+       background-color: #fff;
+       border-radius: 3px;
+     }
+
+     .leaflet-popup-tip{
+       background-color: #fff;
+     }
+
+     .leaflet-popup-content {
+       font-size: 1.125em;
+       color: #363636;
+     }
+
+     .leaflet-popup-content h4{
+       font-size: 20px;
+       line-height: 0;
+     }
+
+     .photo-box {
+       height: 150px;
+       width: 100%;
+       border: 2px solid #ccc;
+       margin-bottom: 1em;
+       overflow: hidden;
+     }
+
+  </style>
+</head>
+<body>
+<style>
+
+h3 {
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
+h4 {
+	color: #414243 !important;
+  line-height: 3em;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-top:1em;
+  font-size: 1.25em;
+}
+
+p {
+		font-size: 1.05em !important;
+  	font-family: Georgia,Times,Times New Roman,serif;
+}
+
+small {
+  color: #414243 !important;
+}
+
+.rancher {
+  font-size: 0.85em !important;
+}
+
+.map-container {
+  background-color: #f4f4f2;
+}
+
+.map-tease {
+  font-size: 0.8em !important;
+  font-family: Helvetica;
+}
+
+</style>
+<div class="row">
+<div class="small-12 medium-11 medium-offset-1 columns">
+<h6><small><em> IDAHO</em></small></h6>
+<h3>The Wendell Cattle allotment spans 4,487 acres</h3>
+</div>
+</div>
+<div class="row">
+<div class="small-12 medium-5 medium-offset-1 columns end">
+<h5>Allotment health and management</h5>
+<p>
+<!-- Rangeland Health Standards -->
+      As of 2013, the most recent year of available data, this grazing allotment
+      
+        had not been evaluated for BLM's rangeland health standards.
+      
+
+
+
+
+
+    </p>
+<p>
+<!-- Allotment Management Plans -->
+    
+        
+        
+        
+        
+         The BLM
+        
+           has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+        
+    
+    </p>
+<h5>Who uses this allotment</h5>
+<p> Three ranches use this land.
+    <!-- Permit exemptions  -->
+    
+      Of the three permits issued for this allotment,   three  were renewed under a provision in federal law that exempts permits from environmental review.
+    
+    </p>
+<div class="row">
+<div class="small-10 small-offset-1">
+<ul>
+<li>
+<b>Webb Livestock Company</b> based in Wendell, ID grazes up to
+              
+                    
+                    
+
+                  
+
+                    96 cattle
+                    
+                      between April and September
+                  
+
+                    
+                  
+
+                </li>
+<hr />
+<li>
+<b>Stevia Webb</b> based in Wendell, ID grazes up to
+              
+                    
+                    
+
+                  
+
+                    115 cattle
+                    
+                      between April and September
+                  
+
+                    
+                  
+
+                </li>
+<hr />
+<li>
+<b>Webb Ranches, Llc</b> based in Wendell, ID grazes up to
+              
+                    
+                    
+
+                  
+
+                    275 cattle
+                    
+                      between April and September
+                  
+
+                    
+                  
+
+                </li>
+<ul>
+</ul></ul></div>
+</div>
+</div>
+<div class="small-12 medium-5 columns end map-container">
+<div id="map"></div>
+<h5>Explore from above</h5>
+<p class="map-tease">Everything in the white border is an allotment managed by the the BLM. Zoom in to take a look through the land. Rangeland ecologists look for vegetation patterns, streamside erosion and other things when evaluating rangeland health.</p>
+<script type="text/javascript">
+    var map = L.map('map').setView([42.8238343057, -114.654244119],
+
+    
+    12
+    
+
+    );
+
+    // ESRI OPEN TILES
+    L.esri.basemapLayer('Imagery').addTo(map);
+
+
+    var AllotmentBoundary = { "type": "MultiPolygon", "coordinates": [ [ [ [ -114.673028691453155, 42.850879894751991 ], [ -114.654502450558851, 42.85087087622648 ], [ -114.653273373082143, 42.850908712127321 ], [ -114.646769746818762, 42.850901221425666 ], [ -114.633674388623845, 42.850910329001451 ], [ -114.625872412480902, 42.850910810920702 ], [ -114.617376374808799, 42.850860301939839 ], [ -114.614057821096509, 42.850872196266202 ], [ -114.595859945325586, 42.850977577692518 ], [ -114.5993718167623, 42.843953263849542 ], [ -114.601686544858296, 42.839831888508463 ], [ -114.607447201770924, 42.831521021331596 ], [ -114.610842378901026, 42.82634303449948 ], [ -114.623943418854324, 42.807773984856091 ], [ -114.634744998472883, 42.807776301910067 ], [ -114.634985724132463, 42.807007167486034 ], [ -114.634961581024655, 42.80406710548538 ], [ -114.634950102266401, 42.800437937342934 ], [ -114.635620022433883, 42.800402711837982 ], [ -114.637792432435987, 42.798868593432253 ], [ -114.638928082179476, 42.798925122911811 ], [ -114.641922541690661, 42.797002210896842 ], [ -114.654586782938878, 42.796933940746406 ], [ -114.654770313860766, 42.789769866823036 ], [ -114.659628802185736, 42.789788270551611 ], [ -114.659653750238334, 42.78247685679581 ], [ -114.674188484304395, 42.782575026893994 ], [ -114.679239061110394, 42.782569486568406 ], [ -114.679185582040162, 42.786147829688929 ], [ -114.684117996082605, 42.786225219637686 ], [ -114.682920943538221, 42.800678289340432 ], [ -114.694196490758586, 42.800724717722247 ], [ -114.694013677477329, 42.826028238197324 ], [ -114.693983632604557, 42.827288317400956 ], [ -114.694256250494078, 42.841300734790693 ], [ -114.694240462399733, 42.850472686937664 ], [ -114.693880583946822, 42.850812724634565 ], [ -114.693880177109151, 42.850869765716908 ], [ -114.673028691453155, 42.850879894751991 ] ] ] ] }
+
+    var AllotmentStyle = {
+          weight: 3,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 0,
+          // fillColor: getColor(feature.properties.LHS_CLASS)
+      }
+
+    L.geoJson( AllotmentBoundary, {
+      style: AllotmentStyle
+    }).addTo(map);
+
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable()
+
+  </script>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- &lt;link rel="stylesheet" href="css/style.css"  /&gt; -->
+<script type="text/javascript" src="http://opb-news-interactives.s3.amazonaws.com/lib/pym.js"></script>
+<!-- SWITCH FROM CDN TO OPB HOST BEFORE YOU PUSH? -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
+<!-- DON'T FORGET YOUR GEOGRAPHY JSON FILES  -->
+<!-- &lt;script src="js/yourgeography.geojson"&gt;&lt;/script&gt; -->
+<!-- Using Foundation, for now ... -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+<style type="text/css">
+
+     html {
+       padding: 0;
+       margin: 0;
+     }
+
+     body {
+       margin: 0;
+       padding: 0;
+     }
+
+     #map {
+       height: 400px;
+       width: 100%;
+       margin-bottom: 1.5em;
+       margin-top: 1.5em;
+      }
+
+     /*LEAFLET STYLE OVERRIDES*/
+
+     .leaflet-popup-content-wrapper {
+       background-color: #fff;
+       border-radius: 3px;
+     }
+
+     .leaflet-popup-tip{
+       background-color: #fff;
+     }
+
+     .leaflet-popup-content {
+       font-size: 1.125em;
+       color: #363636;
+     }
+
+     .leaflet-popup-content h4{
+       font-size: 20px;
+       line-height: 0;
+     }
+
+     .photo-box {
+       height: 150px;
+       width: 100%;
+       border: 2px solid #ccc;
+       margin-bottom: 1em;
+       overflow: hidden;
+     }
+
+  </style>
+</head>
+<body>
+<style>
+
+h3 {
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
+h4 {
+	color: #414243 !important;
+  line-height: 3em;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-top:1em;
+  font-size: 1.25em;
+}
+
+p {
+		font-size: 1.05em !important;
+  	font-family: Georgia,Times,Times New Roman,serif;
+}
+
+small {
+  color: #414243 !important;
+}
+
+.rancher {
+  font-size: 0.85em !important;
+}
+
+.map-container {
+  background-color: #f4f4f2;
+}
+
+.map-tease {
+  font-size: 0.8em !important;
+  font-family: Helvetica;
+}
+
+</style>
+<div class="row">
+<div class="small-12 medium-11 medium-offset-1 columns">
+<h6><small><em> IDAHO</em></small></h6>
+<h3>The Hammett #2 allotment spans 1,682 acres</h3>
+</div>
+</div>
+<div class="row">
+<div class="small-12 medium-5 medium-offset-1 columns end">
+<h5>Allotment health and management</h5>
+<p>
+<!-- Rangeland Health Standards -->
+      As of 2013, the most recent year of available data, this grazing allotment
+      
+        had not been evaluated for BLM's rangeland health standards.
+      
+
+
+
+
+
+    </p>
+<p>
+<!-- Allotment Management Plans -->
+    
+        
+        
+        
+        
+         The BLM
+        
+           has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+        
+    
+    </p>
+<h5>Who uses this allotment</h5>
+<p> Two ranches use this land.
+    <!-- Permit exemptions  -->
+    
+      Of the two permits issued for this allotment,   two  were renewed under a provision in federal law that exempts permits from environmental review.
+    
+    </p>
+<div class="row">
+<div class="small-10 small-offset-1">
+<ul>
+<li>
+<b>Half Moon Llc</b> based in Eagle, ID grazes up to
+              
+                    
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+
+                  
+
+                    125 cattle
+                    
+                      between November and December
+                  
+
+                    
+                  
+
+                </li>
+
+<hr />
+<li>
+<b>Barber/Caven Ranches</b> based in Eagle, ID grazes up to
+              
+                    
+                    
+                  
+                    
+
+                  
+
+                    125 cattle
+                    
+                      between November and December
+                  
+
+                    
+                  
+
+                </li>
+<ul>
+</ul></ul></div>
+</div>
+</div>
+<div class="small-12 medium-5 columns end map-container">
+<div id="map"></div>
+<h5>Explore from above</h5>
+<p class="map-tease">Everything in the white border is an allotment managed by the the BLM. Zoom in to take a look through the land. Rangeland ecologists look for vegetation patterns, streamside erosion and other things when evaluating rangeland health.</p>
+<script type="text/javascript">
+    var map = L.map('map').setView([43.0056217298, -115.428262589],
+
+    
+    12
+    
+
+    );
+
+    // ESRI OPEN TILES
+    L.esri.basemapLayer('Imagery').addTo(map);
+
+
+    var AllotmentBoundary = { "type": "MultiPolygon", "coordinates": [ [ [ [ -115.441128880133036, 43.027956819339245 ], [ -115.440120188179733, 43.027486265332307 ], [ -115.439257252360406, 43.027118793158586 ], [ -115.437176958782246, 43.026176405265005 ], [ -115.435629826810086, 43.025506918126261 ], [ -115.434521443919181, 43.024991983894445 ], [ -115.432774882927475, 43.024027041829605 ], [ -115.430781794037998, 43.022919168795411 ], [ -115.427669374309033, 43.021192532371813 ], [ -115.426251387970709, 43.020371628293937 ], [ -115.425322743506612, 43.019881556556498 ], [ -115.424887156584049, 43.019578429335866 ], [ -115.423104954519403, 43.018365230749879 ], [ -115.422576599883456, 43.017912182984169 ], [ -115.422180542563609, 43.017713136357159 ], [ -115.418813290559882, 43.015478497656254 ], [ -115.417761508737982, 43.014770575709868 ], [ -115.417073277384333, 43.014364831114158 ], [ -115.417075830159632, 43.009662463679696 ], [ -115.417108784008818, 43.004244563117297 ], [ -115.417113582248504, 43.003447751510812 ], [ -115.414645478106664, 43.003403828759929 ], [ -115.412504104753197, 42.996596329697859 ], [ -115.412215927506438, 42.996146606476792 ], [ -115.41230695786588, 42.994070250318714 ], [ -115.412318998863242, 42.994064140769787 ], [ -115.412170211526941, 42.989020157178047 ], [ -115.420930119206204, 42.988646097028351 ], [ -115.432295347062819, 42.988135980243058 ], [ -115.433547726034632, 42.988092860690962 ], [ -115.433965291621035, 42.988103649745959 ], [ -115.433935925975092, 42.988260324145003 ], [ -115.433389178087083, 42.990133926738999 ], [ -115.43159101506572, 42.996295056818759 ], [ -115.441254533598311, 42.99628743690689 ], [ -115.44125453883656, 42.996294468388463 ], [ -115.441241167322886, 43.000761701125242 ], [ -115.441246478911395, 43.002882818154667 ], [ -115.441234680619701, 43.002919227504691 ], [ -115.441218506640709, 43.008339638936334 ], [ -115.441215293845602, 43.009409630671506 ], [ -115.441213972059771, 43.009851990655207 ], [ -115.441211782470063, 43.010583854909619 ], [ -115.441211386108876, 43.010707496885772 ], [ -115.441196116601617, 43.015799824313731 ], [ -115.441172184770025, 43.023786579828823 ], [ -115.441170503290863, 43.024333195014371 ], [ -115.441171898412193, 43.02446087917577 ], [ -115.441132129595971, 43.027960470401517 ], [ -115.441128880133036, 43.027956819339245 ] ] ] ] }
+
+    var AllotmentStyle = {
+          weight: 3,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 0,
+          // fillColor: getColor(feature.properties.LHS_CLASS)
+      }
+
+    L.geoJson( AllotmentBoundary, {
+      style: AllotmentStyle
+    }).addTo(map);
+
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable()
+
+  </script>
+</div>
+</div>
+</body>
+</html>

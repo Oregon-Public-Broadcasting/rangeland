@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- &lt;link rel="stylesheet" href="css/style.css"  /&gt; -->
+<script type="text/javascript" src="http://opb-news-interactives.s3.amazonaws.com/lib/pym.js"></script>
+<!-- SWITCH FROM CDN TO OPB HOST BEFORE YOU PUSH? -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
+<!-- DON'T FORGET YOUR GEOGRAPHY JSON FILES  -->
+<!-- &lt;script src="js/yourgeography.geojson"&gt;&lt;/script&gt; -->
+<!-- Using Foundation, for now ... -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+<style type="text/css">
+
+     html {
+       padding: 0;
+       margin: 0;
+     }
+
+     body {
+       margin: 0;
+       padding: 0;
+     }
+
+     #map {
+       height: 400px;
+       width: 100%;
+       margin-bottom: 1.5em;
+       margin-top: 1.5em;
+      }
+
+     /*LEAFLET STYLE OVERRIDES*/
+
+     .leaflet-popup-content-wrapper {
+       background-color: #fff;
+       border-radius: 3px;
+     }
+
+     .leaflet-popup-tip{
+       background-color: #fff;
+     }
+
+     .leaflet-popup-content {
+       font-size: 1.125em;
+       color: #363636;
+     }
+
+     .leaflet-popup-content h4{
+       font-size: 20px;
+       line-height: 0;
+     }
+
+     .photo-box {
+       height: 150px;
+       width: 100%;
+       border: 2px solid #ccc;
+       margin-bottom: 1em;
+       overflow: hidden;
+     }
+
+  </style>
+</head>
+<body>
+<style>
+
+h3 {
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
+h4 {
+	color: #414243 !important;
+  line-height: 3em;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-top:1em;
+  font-size: 1.25em;
+}
+
+p {
+		font-size: 1.05em !important;
+  	font-family: Georgia,Times,Times New Roman,serif;
+}
+
+small {
+  color: #414243 !important;
+}
+
+.rancher {
+  font-size: 0.85em !important;
+}
+
+.map-container {
+  background-color: #f4f4f2;
+}
+
+.map-tease {
+  font-size: 0.8em !important;
+  font-family: Helvetica;
+}
+
+</style>
+<div class="row">
+<div class="small-12 medium-11 medium-offset-1 columns">
+<h6><small><em> UTAH</em></small></h6>
+<h3>The Amasa allotment spans 5,422 acres</h3>
+</div>
+</div>
+<div class="row">
+<div class="small-12 medium-5 medium-offset-1 columns end">
+<h5>Allotment health and management</h5>
+<p>
+<!-- Rangeland Health Standards -->
+      As of 2013, the most recent year of available data, this grazing allotment
+      
+        did not meet rangeland health standards in its last evaluation.
+         Livestock grazing was cited as a factor. 
+      
+
+
+
+
+
+    </p>
+<p>
+<!-- Allotment Management Plans -->
+    
+        
+        
+        
+        
+         The BLM
+        
+           has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+        
+    
+    </p>
+<h5>Who uses this allotment</h5>
+<p> Two ranches use this land.
+    <!-- Permit exemptions  -->
+    
+      Of the two permits issued for this allotment,   none  were renewed under a provision in federal law that exempts permits from environmental review.
+    
+    </p>
+<div class="row">
+<div class="small-10 small-offset-1">
+<ul>
+<li>
+<b>Fred S. Tolbert</b> based in Hinckley, UT grazes up to
+              
+                    
+                    
+                  
+                    
+
+                  
+
+                    16 cattle
+                    
+                      between May and September and 
+                  
+
+                    
+                  
+                    
+                  
+
+                </li>
+<hr />
+<li>
+<b>Verl Tolbert</b> based in Hinckley, UT grazes up to
+              
+                    
+                    
+                  
+                    
+
+                  
+
+                    22 cattle
+                    
+                      between May and September
+                  
+
+                    
+                  
+
+                </li>
+<ul>
+</ul></ul></div>
+</div>
+</div>
+<div class="small-12 medium-5 columns end map-container">
+<div id="map"></div>
+<h5>Explore from above</h5>
+<p class="map-tease">Everything in the white border is an allotment managed by the the BLM. Zoom in to take a look through the land. Rangeland ecologists look for vegetation patterns, streamside erosion and other things when evaluating rangeland health.</p>
+<script type="text/javascript">
+    var map = L.map('map').setView([39.1800456526, -113.38513543],
+
+    
+    12
+    
+
+    );
+
+    // ESRI OPEN TILES
+    L.esri.basemapLayer('Imagery').addTo(map);
+
+
+    var AllotmentBoundary = { "type": "MultiPolygon", "coordinates": [ [ [ [ -113.358425862753066, 39.205739306366475 ], [ -113.36007870092331, 39.20264933080523 ], [ -113.360001705589525, 39.200349542206474 ], [ -113.359534573907851, 39.198819979334736 ], [ -113.361663450535858, 39.196151833297698 ], [ -113.362785454630483, 39.195158190845184 ], [ -113.361683600348798, 39.193993910557239 ], [ -113.362278335871977, 39.192435619360225 ], [ -113.362401653076418, 39.190599224076877 ], [ -113.361780141350337, 39.188598152089938 ], [ -113.36117712414935, 39.186665687247725 ], [ -113.360796706506633, 39.185446529275964 ], [ -113.358534205538447, 39.18094244193761 ], [ -113.361632815486658, 39.17402368936763 ], [ -113.360109968055056, 39.16703136728141 ], [ -113.362844007821778, 39.161541723606852 ], [ -113.369625486735416, 39.156136160876144 ], [ -113.3787957853406, 39.151016287222113 ], [ -113.401427156007415, 39.151823016587521 ], [ -113.40642142334049, 39.152000446690828 ], [ -113.411411444196531, 39.152177515354694 ], [ -113.417283265566851, 39.175682125484194 ], [ -113.414864266554048, 39.179445564018003 ], [ -113.410223644152921, 39.187807689246 ], [ -113.408898856810779, 39.191171370507256 ], [ -113.407792584935834, 39.19259347062021 ], [ -113.406648306043635, 39.193532502539838 ], [ -113.405699284775636, 39.193926590276554 ], [ -113.404663395813103, 39.194860796019277 ], [ -113.402114283835743, 39.197159552682081 ], [ -113.400851877101687, 39.197989005588674 ], [ -113.398829235735292, 39.19923582328196 ], [ -113.396090240581344, 39.200070462058974 ], [ -113.394864211767839, 39.200690407547391 ], [ -113.394525768245913, 39.201734651523296 ], [ -113.393439441891999, 39.202566466882026 ], [ -113.392179516343745, 39.203374882964866 ], [ -113.390366754311501, 39.203426940722458 ], [ -113.388737149539082, 39.203457591486469 ], [ -113.38170194711428, 39.204473721758909 ], [ -113.380411744464098, 39.207116146227889 ], [ -113.378082983088476, 39.209645623487148 ], [ -113.376048721531021, 39.213242295254481 ], [ -113.374111709885284, 39.217172334676746 ], [ -113.372118350352778, 39.220506639815589 ], [ -113.369639816849329, 39.219279500492348 ], [ -113.366005267275042, 39.216756970902566 ], [ -113.362672369480109, 39.213844580846228 ], [ -113.358176572549965, 39.212101836794808 ], [ -113.358233376164748, 39.209655502832213 ], [ -113.357712571597418, 39.207904073757433 ], [ -113.358425862753066, 39.205739306366475 ] ] ] ] }
+
+    var AllotmentStyle = {
+          weight: 3,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 0,
+          // fillColor: getColor(feature.properties.LHS_CLASS)
+      }
+
+    L.geoJson( AllotmentBoundary, {
+      style: AllotmentStyle
+    }).addTo(map);
+
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable()
+
+  </script>
+</div>
+</div>
+</body>
+</html>

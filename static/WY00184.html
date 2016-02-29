@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- &lt;link rel="stylesheet" href="css/style.css"  /&gt; -->
+<script type="text/javascript" src="http://opb-news-interactives.s3.amazonaws.com/lib/pym.js"></script>
+<!-- SWITCH FROM CDN TO OPB HOST BEFORE YOU PUSH? -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
+<!-- DON'T FORGET YOUR GEOGRAPHY JSON FILES  -->
+<!-- &lt;script src="js/yourgeography.geojson"&gt;&lt;/script&gt; -->
+<!-- Using Foundation, for now ... -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+<style type="text/css">
+
+     html {
+       padding: 0;
+       margin: 0;
+     }
+
+     body {
+       margin: 0;
+       padding: 0;
+     }
+
+     #map {
+       height: 400px;
+       width: 100%;
+       margin-bottom: 1.5em;
+       margin-top: 1.5em;
+      }
+
+     /*LEAFLET STYLE OVERRIDES*/
+
+     .leaflet-popup-content-wrapper {
+       background-color: #fff;
+       border-radius: 3px;
+     }
+
+     .leaflet-popup-tip{
+       background-color: #fff;
+     }
+
+     .leaflet-popup-content {
+       font-size: 1.125em;
+       color: #363636;
+     }
+
+     .leaflet-popup-content h4{
+       font-size: 20px;
+       line-height: 0;
+     }
+
+     .photo-box {
+       height: 150px;
+       width: 100%;
+       border: 2px solid #ccc;
+       margin-bottom: 1em;
+       overflow: hidden;
+     }
+
+  </style>
+</head>
+<body>
+<style>
+
+h3 {
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
+h4 {
+	color: #414243 !important;
+  line-height: 3em;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-top:1em;
+  font-size: 1.25em;
+}
+
+p {
+		font-size: 1.05em !important;
+  	font-family: Georgia,Times,Times New Roman,serif;
+}
+
+small {
+  color: #414243 !important;
+}
+
+.rancher {
+  font-size: 0.85em !important;
+}
+
+.map-container {
+  background-color: #f4f4f2;
+}
+
+.map-tease {
+  font-size: 0.8em !important;
+  font-family: Helvetica;
+}
+
+</style>
+<div class="row">
+<div class="small-12 medium-11 medium-offset-1 columns">
+<h6><small><em> WYOMING</em></small></h6>
+<h3>The Upper Sand Creek allotment spans 5,819 acres</h3>
+</div>
+</div>
+<div class="row">
+<div class="small-12 medium-5 medium-offset-1 columns end">
+<h5>Allotment health and management</h5>
+<p>
+<!-- Rangeland Health Standards -->
+      As of 2013, the most recent year of available data, this grazing allotment
+      
+        did not meet rangeland health standards in its last evaluation.
+         Current livesotck grazing was not cited as a factor.
+        
+      
+
+
+
+
+
+    </p>
+<p>
+<!-- Allotment Management Plans -->
+    
+        
+        
+        
+        
+         The BLM
+        
+           has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+        
+    
+    </p>
+<h5>Who uses this allotment</h5>
+<p> One  ranch uses  this land.
+    <!-- Permit exemptions  -->
+    
+      The one permit issued for this allotment was  not  renewed under a provision in federal law that exempts permits from environmental review.
+    
+    </p>
+<div class="row">
+<div class="small-10 small-offset-1">
+<ul>
+<li>
+<b>Hampton Sheep Co</b> based in Worland, WY grazes up to
+              
+                    
+                    
+                  
+
+                </li>
+
+              
+                    
+                    
+
+                  
+
+                    176 cattle
+                    
+                      between December and February
+                  
+
+                    
+                  
+
+                
+
+
+
+
+<ul>
+</ul></ul></div>
+</div>
+</div>
+<div class="small-12 medium-5 columns end map-container">
+<div id="map"></div>
+<h5>Explore from above</h5>
+<p class="map-tease">Everything in the white border is an allotment managed by the the BLM. Zoom in to take a look through the land. Rangeland ecologists look for vegetation patterns, streamside erosion and other things when evaluating rangeland health.</p>
+<script type="text/javascript">
+    var map = L.map('map').setView([44.050256658, -107.785833649],
+
+    
+    12
+    
+
+    );
+
+    // ESRI OPEN TILES
+    L.esri.basemapLayer('Imagery').addTo(map);
+
+
+    var AllotmentBoundary = { "type": "MultiPolygon", "coordinates": [ [ [ [ -107.7644300487473, 44.067982164770989 ], [ -107.758830014130368, 44.066959994792981 ], [ -107.750628039755298, 44.066988122464984 ], [ -107.749254723491916, 44.067093662785197 ], [ -107.747751620781713, 44.056492339830115 ], [ -107.745989182645374, 44.052994258967345 ], [ -107.74543207698521, 44.053040268288854 ], [ -107.743936698951998, 44.045921826532748 ], [ -107.740434623048301, 44.043900138528414 ], [ -107.740511031697707, 44.043488198825727 ], [ -107.733445862973909, 44.036366086800307 ], [ -107.725503313075322, 44.036186828546832 ], [ -107.725533827644739, 44.033421149732433 ], [ -107.726205172616986, 44.033421264973953 ], [ -107.729493721616535, 44.033146368444427 ], [ -107.731591863668513, 44.032799452921445 ], [ -107.73394939352923, 44.032112789551476 ], [ -107.734422426975897, 44.032001960342015 ], [ -107.735200719612223, 44.031742521896916 ], [ -107.737024195617806, 44.031528916418793 ], [ -107.737916760741768, 44.031380164004219 ], [ -107.739847116314166, 44.031632111747669 ], [ -107.740503314005068, 44.031834236721345 ], [ -107.740831394516604, 44.032154681606279 ], [ -107.74224289764382, 44.032497912891394 ], [ -107.742738736697703, 44.032559102669886 ], [ -107.743822244871538, 44.032772570207328 ], [ -107.745470124162324, 44.032810702942641 ], [ -107.74796512673295, 44.032932750743775 ], [ -107.750635411723266, 44.032913676518717 ], [ -107.768694845707486, 44.033115756094375 ], [ -107.770045296996756, 44.033543054354638 ], [ -107.777743660496725, 44.038517437279616 ], [ -107.796505084978989, 44.03930696422244 ], [ -107.810154489694327, 44.036586865192739 ], [ -107.825688486858397, 44.032245685774406 ], [ -107.831341935940443, 44.036335013483964 ], [ -107.831883716218655, 44.037380046690018 ], [ -107.839055631806701, 44.04805741336282 ], [ -107.837613608871806, 44.052181048136859 ], [ -107.833234195445272, 44.053600412135737 ], [ -107.829869546853317, 44.058280874942554 ], [ -107.82080552890794, 44.064476041443825 ], [ -107.817982686785356, 44.064968325469941 ], [ -107.816578812300506, 44.064907081562858 ], [ -107.816578857698644, 44.065288756386188 ], [ -107.815617372880851, 44.065769453396918 ], [ -107.815678525991615, 44.066097341839253 ], [ -107.813328565406408, 44.067070118584262 ], [ -107.794941040434168, 44.067138985895589 ], [ -107.788051545252884, 44.066502073705905 ], [ -107.787883631309086, 44.065899321909782 ], [ -107.783862849631277, 44.067329930691479 ], [ -107.780025122194431, 44.066772861699079 ], [ -107.778659518385453, 44.072216351127103 ], [ -107.7771411531523, 44.073265480646945 ], [ -107.775844048230809, 44.073154864459752 ], [ -107.771876562284461, 44.069965767184321 ], [ -107.769183454226166, 44.069035048372122 ], [ -107.766917309180045, 44.067943962192317 ], [ -107.7644300487473, 44.067982164770989 ] ] ] ] }
+
+    var AllotmentStyle = {
+          weight: 3,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 0,
+          // fillColor: getColor(feature.properties.LHS_CLASS)
+      }
+
+    L.geoJson( AllotmentBoundary, {
+      style: AllotmentStyle
+    }).addTo(map);
+
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable()
+
+  </script>
+</div>
+</div>
+</body>
+</html>

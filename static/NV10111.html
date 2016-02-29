@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- &lt;link rel="stylesheet" href="css/style.css"  /&gt; -->
+<script type="text/javascript" src="http://opb-news-interactives.s3.amazonaws.com/lib/pym.js"></script>
+<!-- SWITCH FROM CDN TO OPB HOST BEFORE YOU PUSH? -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
+<!-- DON'T FORGET YOUR GEOGRAPHY JSON FILES  -->
+<!-- &lt;script src="js/yourgeography.geojson"&gt;&lt;/script&gt; -->
+<!-- Using Foundation, for now ... -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+<style type="text/css">
+
+     html {
+       padding: 0;
+       margin: 0;
+     }
+
+     body {
+       margin: 0;
+       padding: 0;
+     }
+
+     #map {
+       height: 400px;
+       width: 100%;
+       margin-bottom: 1.5em;
+       margin-top: 1.5em;
+      }
+
+     /*LEAFLET STYLE OVERRIDES*/
+
+     .leaflet-popup-content-wrapper {
+       background-color: #fff;
+       border-radius: 3px;
+     }
+
+     .leaflet-popup-tip{
+       background-color: #fff;
+     }
+
+     .leaflet-popup-content {
+       font-size: 1.125em;
+       color: #363636;
+     }
+
+     .leaflet-popup-content h4{
+       font-size: 20px;
+       line-height: 0;
+     }
+
+     .photo-box {
+       height: 150px;
+       width: 100%;
+       border: 2px solid #ccc;
+       margin-bottom: 1em;
+       overflow: hidden;
+     }
+
+  </style>
+</head>
+<body>
+<style>
+
+h3 {
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
+h4 {
+	color: #414243 !important;
+  line-height: 3em;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-top:1em;
+  font-size: 1.25em;
+}
+
+p {
+		font-size: 1.05em !important;
+  	font-family: Georgia,Times,Times New Roman,serif;
+}
+
+small {
+  color: #414243 !important;
+}
+
+.rancher {
+  font-size: 0.85em !important;
+}
+
+.map-container {
+  background-color: #f4f4f2;
+}
+
+.map-tease {
+  font-size: 0.8em !important;
+  font-family: Helvetica;
+}
+
+</style>
+<div class="row">
+<div class="small-12 medium-11 medium-offset-1 columns">
+<h6><small><em> NEVADA</em></small></h6>
+<h3>The Harmony allotment spans 6,786 acres</h3>
+</div>
+</div>
+<div class="row">
+<div class="small-12 medium-5 medium-offset-1 columns end">
+<h5>Allotment health and management</h5>
+<p>
+<!-- Rangeland Health Standards -->
+      As of 2013, the most recent year of available data, this grazing allotment
+      
+        had not been evaluated for BLM's rangeland health standards.
+      
+
+
+
+
+
+    </p>
+<p>
+<!-- Allotment Management Plans -->
+    
+        
+        
+        
+        
+         The BLM
+        
+           has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+        
+    
+    </p>
+<h5>Who uses this allotment</h5>
+<p> Two ranches use this land.
+    <!-- Permit exemptions  -->
+    
+      Of the two permits issued for this allotment,   two  were renewed under a provision in federal law that exempts permits from environmental review.
+    
+    </p>
+<div class="row">
+<div class="small-10 small-offset-1">
+<ul>
+<li>
+<b>Pedroli Ranches</b> based in Walnut Creek, CA grazes up to
+              
+                    
+                    
+                  
+                    
+                  
+
+                </li>
+              
+                    
+                    
+
+                  
+
+                    31 cattle
+                    
+                      between April and September
+                  
+
+                    
+                  
+
+                
+<hr />
+<li>
+<b>E. James And Bethany Thompson</b> based in Winnemucca, NV grazes up to
+              
+                    
+                    
+
+                  
+
+                    42 cattle
+                    
+                      between May and September,
+                  
+
+                    
+                  
+                    
+                  
+                    
+                  
+
+                </li>
+<ul>
+</ul></ul></div>
+</div>
+</div>
+<div class="small-12 medium-5 columns end map-container">
+<div id="map"></div>
+<h5>Explore from above</h5>
+<p class="map-tease">Everything in the white border is an allotment managed by the the BLM. Zoom in to take a look through the land. Rangeland ecologists look for vegetation patterns, streamside erosion and other things when evaluating rangeland health.</p>
+<script type="text/javascript">
+    var map = L.map('map').setView([40.9592479886, -117.649118632],
+
+    
+    12
+    
+
+    );
+
+    // ESRI OPEN TILES
+    L.esri.basemapLayer('Imagery').addTo(map);
+
+
+    var AllotmentBoundary = { "type": "MultiPolygon", "coordinates": [ [ [ [ -117.639601402832525, 40.974471620913448 ], [ -117.639460820346429, 40.960006915304909 ], [ -117.639466821638194, 40.956343413906666 ], [ -117.639466781478276, 40.956024889714477 ], [ -117.625964412776582, 40.942380938020477 ], [ -117.624808765129458, 40.9422259730379 ], [ -117.623639525962091, 40.942069172920647 ], [ -117.601125249455208, 40.94249597529307 ], [ -117.595956464487415, 40.931537036810461 ], [ -117.59658869891723, 40.93044929089006 ], [ -117.597070541359258, 40.929620262281979 ], [ -117.596676609024058, 40.92373930539852 ], [ -117.598933306007979, 40.919812393213313 ], [ -117.598793772918526, 40.916061900148584 ], [ -117.598968173565567, 40.915738661528884 ], [ -117.601223492888963, 40.911558308698112 ], [ -117.603813812456025, 40.909860641559249 ], [ -117.613449784762537, 40.905576976411979 ], [ -117.61599150731108, 40.904446830326343 ], [ -117.615955398287525, 40.904551181562894 ], [ -117.623166736967192, 40.915656586835823 ], [ -117.625962186519089, 40.917000481578619 ], [ -117.63377398264015, 40.921740435223917 ], [ -117.640537990234222, 40.925843639065469 ], [ -117.641361047233985, 40.925920014539244 ], [ -117.65339371407228, 40.927035893370167 ], [ -117.669138608537622, 40.932919680656227 ], [ -117.672424730479904, 40.940789355979966 ], [ -117.674372669121269, 40.945453377657046 ], [ -117.670862802189305, 40.950284497856352 ], [ -117.671003396897987, 40.95192113411025 ], [ -117.667970759253336, 40.9518920338691 ], [ -117.667986936724475, 40.956252605299852 ], [ -117.673880669706776, 40.956222635508723 ], [ -117.678056641612002, 40.956207463782185 ], [ -117.678101271526984, 40.959936029520129 ], [ -117.678047465938931, 40.96357130371949 ], [ -117.66824658819192, 40.963590025235511 ], [ -117.668141912183501, 40.967115633117338 ], [ -117.639575267442623, 40.988890722292105 ], [ -117.639577904029863, 40.987435149742943 ], [ -117.639601402832525, 40.974471620913448 ] ] ], [ [ [ -117.658914645831643, 41.023311476123901 ], [ -117.658481828198788, 41.007289029334821 ], [ -117.658256062989594, 41.000565515182174 ], [ -117.659966981162285, 40.999917265667129 ], [ -117.684665848355351, 40.989716251747211 ], [ -117.690090831035818, 40.988718017092893 ], [ -117.690536031898588, 40.988702648058769 ], [ -117.694193467399955, 40.98860251885398 ], [ -117.695002246668338, 40.989443179875792 ], [ -117.695892740936387, 40.989422153528466 ], [ -117.696635162016548, 40.989404617603839 ], [ -117.6966198767945, 40.992798403104729 ], [ -117.699936083769529, 40.991359294384516 ], [ -117.706189829653255, 40.995482630578145 ], [ -117.706329044955382, 40.995460064184442 ], [ -117.708359821328585, 40.995130841733825 ], [ -117.703699583416295, 40.999919043180952 ], [ -117.703077259761045, 41.000780358633904 ], [ -117.701868758141828, 41.002310103098651 ], [ -117.700576585908522, 41.003804309509242 ], [ -117.699506183843582, 41.004909804376652 ], [ -117.699263624795449, 41.005138092677633 ], [ -117.698552467354773, 41.005807394731342 ], [ -117.697339780371493, 41.006958773202335 ], [ -117.695938409771486, 41.008264411237718 ], [ -117.695300738035144, 41.008691639654728 ], [ -117.693594242694047, 41.009842677639313 ], [ -117.693009885896018, 41.010236814266364 ], [ -117.691634051779133, 41.011178442613449 ], [ -117.68927854912225, 41.012790464316886 ], [ -117.687684466689106, 41.013889966622969 ], [ -117.686562099408974, 41.01460829697789 ], [ -117.685608711184003, 41.015267621905757 ], [ -117.684696357686519, 41.01589854851845 ], [ -117.683090510137234, 41.017025081955822 ], [ -117.681330371593887, 41.018188538091955 ], [ -117.680353545679296, 41.018853614621506 ], [ -117.679995729351958, 41.01909723005069 ], [ -117.678813446934768, 41.019788813886237 ], [ -117.678483115720496, 41.020051995936043 ], [ -117.677798203673149, 41.020533450747507 ], [ -117.677325784848136, 41.020860523768363 ], [ -117.676652007580429, 41.021269846090625 ], [ -117.675729008206829, 41.021734672941108 ], [ -117.675208081413615, 41.02197193611547 ], [ -117.674568029764316, 41.022191876387424 ], [ -117.673975368589396, 41.022393519441906 ], [ -117.67335854859185, 41.022559268241132 ], [ -117.672884172406356, 41.022697158265217 ], [ -117.672255084420442, 41.022826939473902 ], [ -117.671577965147335, 41.022911956318929 ], [ -117.671031217259298, 41.022951168134284 ], [ -117.669437267528536, 41.022942409775283 ], [ -117.665148594611523, 41.023084561991247 ], [ -117.658914645831643, 41.023311476123901 ] ] ] ] }
+
+    var AllotmentStyle = {
+          weight: 3,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 0,
+          // fillColor: getColor(feature.properties.LHS_CLASS)
+      }
+
+    L.geoJson( AllotmentBoundary, {
+      style: AllotmentStyle
+    }).addTo(map);
+
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable()
+
+  </script>
+</div>
+</div>
+</body>
+</html>

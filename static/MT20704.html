@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- &lt;link rel="stylesheet" href="css/style.css"  /&gt; -->
+<script type="text/javascript" src="http://opb-news-interactives.s3.amazonaws.com/lib/pym.js"></script>
+<!-- SWITCH FROM CDN TO OPB HOST BEFORE YOU PUSH? -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
+<!-- DON'T FORGET YOUR GEOGRAPHY JSON FILES  -->
+<!-- &lt;script src="js/yourgeography.geojson"&gt;&lt;/script&gt; -->
+<!-- Using Foundation, for now ... -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+<style type="text/css">
+
+     html {
+       padding: 0;
+       margin: 0;
+     }
+
+     body {
+       margin: 0;
+       padding: 0;
+     }
+
+     #map {
+       height: 400px;
+       width: 100%;
+       margin-bottom: 1.5em;
+       margin-top: 1.5em;
+      }
+
+     /*LEAFLET STYLE OVERRIDES*/
+
+     .leaflet-popup-content-wrapper {
+       background-color: #fff;
+       border-radius: 3px;
+     }
+
+     .leaflet-popup-tip{
+       background-color: #fff;
+     }
+
+     .leaflet-popup-content {
+       font-size: 1.125em;
+       color: #363636;
+     }
+
+     .leaflet-popup-content h4{
+       font-size: 20px;
+       line-height: 0;
+     }
+
+     .photo-box {
+       height: 150px;
+       width: 100%;
+       border: 2px solid #ccc;
+       margin-bottom: 1em;
+       overflow: hidden;
+     }
+
+  </style>
+</head>
+<body>
+<style>
+
+h3 {
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
+h4 {
+	color: #414243 !important;
+  line-height: 3em;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-top:1em;
+  font-size: 1.25em;
+}
+
+p {
+		font-size: 1.05em !important;
+  	font-family: Georgia,Times,Times New Roman,serif;
+}
+
+small {
+  color: #414243 !important;
+}
+
+.rancher {
+  font-size: 0.85em !important;
+}
+
+.map-container {
+  background-color: #f4f4f2;
+}
+
+.map-tease {
+  font-size: 0.8em !important;
+  font-family: Helvetica;
+}
+
+</style>
+<div class="row">
+<div class="small-12 medium-11 medium-offset-1 columns">
+<h6><small><em> MONTANA/DAKOTAS </em></small></h6>
+<h3>The Cabin Creek allotment spans 191 acres</h3>
+</div>
+</div>
+<div class="row">
+<div class="small-12 medium-5 medium-offset-1 columns end">
+<h5>Allotment health and management</h5>
+<p>
+<!-- Rangeland Health Standards -->
+      As of 2013, the most recent year of available data, this grazing allotment
+      
+        did not meet rangeland health standards in its last evaluation.
+         Livestock grazing was cited as a factor. 
+      
+
+
+
+
+
+    </p>
+<p>
+<!-- Allotment Management Plans -->
+    
+        
+        
+        
+        
+         The BLM
+        
+           has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+        
+    
+    </p>
+<h5>Who uses this allotment</h5>
+<p> One  ranch uses  this land.
+    <!-- Permit exemptions  -->
+    
+      The one permit issued for this allotment was  not  renewed under a provision in federal law that exempts permits from environmental review.
+    
+    </p>
+<div class="row">
+<div class="small-10 small-offset-1">
+<ul>
+<li>
+<b>Smith&#39;s Elk Meadows Ranch</b> based in Rigby, ID grazes up to
+              
+                    
+                    
+                  
+                    
+                  
+                    
+
+                  
+
+                    11 cattle
+                    
+                      between June and November,
+                  
+
+                    
+                  
+                    
+                  
+                    
+                  
+
+                </li>
+<ul>
+</ul></ul></div>
+</div>
+</div>
+<div class="small-12 medium-5 columns end map-container">
+<div id="map"></div>
+<h5>Explore from above</h5>
+<p class="map-tease">Everything in the white border is an allotment managed by the the BLM. Zoom in to take a look through the land. Rangeland ecologists look for vegetation patterns, streamside erosion and other things when evaluating rangeland health.</p>
+<script type="text/javascript">
+    var map = L.map('map').setView([44.5666583295, -112.870998638],
+
+    
+    13
+    
+
+    );
+
+    // ESRI OPEN TILES
+    L.esri.basemapLayer('Imagery').addTo(map);
+
+
+    var AllotmentBoundary = { "type": "MultiPolygon", "coordinates": [ [ [ [ -112.869347111280632, 44.571073665388781 ], [ -112.869040114737146, 44.570991527836597 ], [ -112.868733413281873, 44.570997108322196 ], [ -112.868418936513208, 44.570964374479523 ], [ -112.868112067433827, 44.570876726285498 ], [ -112.867804248484632, 44.570695901794203 ], [ -112.867497136699527, 44.570652134444877 ], [ -112.867190136663893, 44.570537128601678 ], [ -112.866890754794071, 44.570400073205946 ], [ -112.86657652247716, 44.57029058848137 ], [ -112.86626915925595, 44.570257835431853 ], [ -112.865947277343679, 44.570170117394341 ], [ -112.865639758721002, 44.570077002210262 ], [ -112.865301807594804, 44.569934553159975 ], [ -112.864979669008179, 44.569824984623494 ], [ -112.86466475571838, 44.569644165370548 ], [ -112.864349973384961, 44.569457833729324 ], [ -112.864043350503522, 44.56932615452714 ], [ -112.863728725317642, 44.569200181528444 ], [ -112.863405807977387, 44.569090656643979 ], [ -112.86309895810497, 44.569002996227212 ], [ -112.862784594831751, 44.568898868489455 ], [ -112.862476835249396, 44.568816762366872 ], [ -112.862162496421334, 44.568745639114617 ], [ -112.861863547580427, 44.56869077714552 ], [ -112.861541197717628, 44.56864740615746 ], [ -112.861527693501529, 44.565812552720843 ], [ -112.861522778274221, 44.562176983433446 ], [ -112.866584853045381, 44.562175872923753 ], [ -112.871647175760614, 44.562175787365462 ], [ -112.876527249179745, 44.562175534183268 ], [ -112.881589683644336, 44.562176782633586 ], [ -112.881587850255841, 44.565796712244051 ], [ -112.876527860309267, 44.565795102354251 ], [ -112.876529194317669, 44.569414228765851 ], [ -112.876530984054071, 44.574300031087724 ], [ -112.87653316665947, 44.580271599270326 ], [ -112.875735691540925, 44.574855088590844 ], [ -112.87572016012102, 44.574103811371167 ], [ -112.875504862687222, 44.573884592232041 ], [ -112.875250971551921, 44.573659848482116 ], [ -112.874898068705832, 44.573478990815261 ], [ -112.874683343987741, 44.573369333228392 ], [ -112.87438379274775, 44.573204942882619 ], [ -112.8740690942263, 44.573045996827886 ], [ -112.87373085325018, 44.572914590014769 ], [ -112.873355080191757, 44.572799594648281 ], [ -112.873032658739447, 44.57270106834882 ], [ -112.872725356631193, 44.57256408978072 ], [ -112.872418424692825, 44.572377721471874 ], [ -112.872148872927326, 44.572147444380761 ], [ -112.87183430361614, 44.571950117646821 ], [ -112.871527541047968, 44.571824106234182 ], [ -112.871212894909135, 44.571731020733559 ], [ -112.870890085826048, 44.571648872705026 ], [ -112.870590707448414, 44.571511967472446 ], [ -112.870276443702011, 44.571402353537685 ], [ -112.869953384928934, 44.571331221554971 ], [ -112.869646638075452, 44.571238069703071 ], [ -112.869347111280632, 44.571073665388781 ] ] ] ] }
+
+    var AllotmentStyle = {
+          weight: 3,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 0,
+          // fillColor: getColor(feature.properties.LHS_CLASS)
+      }
+
+    L.geoJson( AllotmentBoundary, {
+      style: AllotmentStyle
+    }).addTo(map);
+
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable()
+
+  </script>
+</div>
+</div>
+</body>
+</html>

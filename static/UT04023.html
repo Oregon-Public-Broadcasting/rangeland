@@ -1,0 +1,255 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- &lt;link rel="stylesheet" href="css/style.css"  /&gt; -->
+<script type="text/javascript" src="http://opb-news-interactives.s3.amazonaws.com/lib/pym.js"></script>
+<!-- SWITCH FROM CDN TO OPB HOST BEFORE YOU PUSH? -->
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
+<!-- DON'T FORGET YOUR GEOGRAPHY JSON FILES  -->
+<!-- &lt;script src="js/yourgeography.geojson"&gt;&lt;/script&gt; -->
+<!-- Using Foundation, for now ... -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+<style type="text/css">
+
+     html {
+       padding: 0;
+       margin: 0;
+     }
+
+     body {
+       margin: 0;
+       padding: 0;
+     }
+
+     #map {
+       height: 400px;
+       width: 100%;
+       margin-bottom: 1.5em;
+       margin-top: 1.5em;
+      }
+
+     /*LEAFLET STYLE OVERRIDES*/
+
+     .leaflet-popup-content-wrapper {
+       background-color: #fff;
+       border-radius: 3px;
+     }
+
+     .leaflet-popup-tip{
+       background-color: #fff;
+     }
+
+     .leaflet-popup-content {
+       font-size: 1.125em;
+       color: #363636;
+     }
+
+     .leaflet-popup-content h4{
+       font-size: 20px;
+       line-height: 0;
+     }
+
+     .photo-box {
+       height: 150px;
+       width: 100%;
+       border: 2px solid #ccc;
+       margin-bottom: 1em;
+       overflow: hidden;
+     }
+
+  </style>
+</head>
+<body>
+<style>
+
+h3 {
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
+h4 {
+	color: #414243 !important;
+  line-height: 3em;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-top:1em;
+  font-size: 1.25em;
+}
+
+p {
+		font-size: 1.05em !important;
+  	font-family: Georgia,Times,Times New Roman,serif;
+}
+
+small {
+  color: #414243 !important;
+}
+
+.rancher {
+  font-size: 0.85em !important;
+}
+
+.map-container {
+  background-color: #f4f4f2;
+}
+
+.map-tease {
+  font-size: 0.8em !important;
+  font-family: Helvetica;
+}
+
+</style>
+<div class="row">
+<div class="small-12 medium-11 medium-offset-1 columns">
+<h6><small><em> UTAH</em></small></h6>
+<h3>The Aragonite allotment spans 16,050 acres</h3>
+</div>
+</div>
+<div class="row">
+<div class="small-12 medium-5 medium-offset-1 columns end">
+<h5>Allotment health and management</h5>
+<p>
+<!-- Rangeland Health Standards -->
+      As of 2013, the most recent year of available data, this grazing allotment
+      
+        did not meet rangeland health standards in its last evaluation.
+         Current livesotck grazing was not cited as a factor.
+        
+      
+
+
+
+
+
+    </p>
+<p>
+<!-- Allotment Management Plans -->
+    
+        
+        
+        
+        
+         The BLM
+        
+           has no listed allotment management plan, which would set long-term goals for rangeland improvement and outline specific monitoring plans.
+        
+    
+    </p>
+<h5>Who uses this allotment</h5>
+<p> One  ranch uses  this land.
+    <!-- Permit exemptions  -->
+    
+      The one permit issued for this allotment was  not  renewed under a provision in federal law that exempts permits from environmental review.
+    
+    </p>
+<div class="row">
+<div class="small-10 small-offset-1">
+<ul>
+<li>
+<b>Bountiful Livestock Co.</b> based in Fruit Heights, UT grazes up to
+              
+                    
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+                  
+                    
+
+                  
+
+                    125 cattle
+                    
+                      between November and February,
+                  
+
+                    
+                  
+                    
+
+                  
+
+                    125 cattle
+                    
+                      between March and April and 
+                  
+
+                    
+                  
+                    
+
+                  
+
+                    770 sheep
+                    
+                      between November and January
+                  
+
+                    
+                  
+
+                </li>
+<ul>
+</ul></ul></div>
+</div>
+</div>
+<div class="small-12 medium-5 columns end map-container">
+<div id="map"></div>
+<h5>Explore from above</h5>
+<p class="map-tease">Everything in the white border is an allotment managed by the the BLM. Zoom in to take a look through the land. Rangeland ecologists look for vegetation patterns, streamside erosion and other things when evaluating rangeland health.</p>
+<script type="text/javascript">
+    var map = L.map('map').setView([40.7211438995, -113.020204537],
+
+    
+    11
+    
+
+    );
+
+    // ESRI OPEN TILES
+    L.esri.basemapLayer('Imagery').addTo(map);
+
+
+    var AllotmentBoundary = { "type": "MultiPolygon", "coordinates": [ [ [ [ -113.142985302461028, 40.711442301011893 ], [ -113.14298558358054, 40.713712254267961 ], [ -113.142984453864045, 40.717333420105959 ], [ -113.142983476056799, 40.720959076872873 ], [ -113.142982494757419, 40.724584730147598 ], [ -113.142974981356659, 40.726737723692139 ], [ -113.140183834156488, 40.726848083204885 ], [ -113.132066440105433, 40.727471231011918 ], [ -113.123209160288539, 40.729733330380732 ], [ -113.104099596278175, 40.734235916086654 ], [ -113.099839663908895, 40.735110693849805 ], [ -113.080372980258815, 40.740331978334559 ], [ -113.062143512584413, 40.746248511685685 ], [ -113.044974262065196, 40.750909306598906 ], [ -113.043964024827304, 40.751183922008835 ], [ -113.024339668017902, 40.756511167619955 ], [ -113.016075320019084, 40.758750169785422 ], [ -113.009365592948058, 40.760569676941508 ], [ -113.008825384145737, 40.760714202085929 ], [ -113.000812748168954, 40.762886603357501 ], [ -112.999240544172181, 40.763312789362168 ], [ -112.995489199018337, 40.76433259164989 ], [ -112.994371149804664, 40.76463117730529 ], [ -112.993512959842491, 40.764866701379709 ], [ -112.993218147475275, 40.763426035152307 ], [ -112.995343476060015, 40.760425701813446 ], [ -112.996918917297108, 40.757056522132608 ], [ -112.998898346568993, 40.755067522572716 ], [ -113.000798540280954, 40.752390766594118 ], [ -113.000812680071647, 40.752342447202864 ], [ -113.001803350688789, 40.748954855063083 ], [ -113.002564072478677, 40.748747994708708 ], [ -113.003299842723791, 40.74740205704726 ], [ -113.002494115610787, 40.746281051712998 ], [ -113.00146795233789, 40.745398067353591 ], [ -113.000812601497856, 40.745106708741048 ], [ -113.000268675282115, 40.744864876064035 ], [ -112.995881608768087, 40.74201782273655 ], [ -112.99229029573344, 40.742917639348583 ], [ -112.987582782588404, 40.741908912473676 ], [ -112.979428205671951, 40.740972693495799 ], [ -112.971917581157086, 40.7402410806774 ], [ -112.955673664526188, 40.737009061157558 ], [ -112.951717568287805, 40.735517697372188 ], [ -112.948061920776766, 40.733904011650466 ], [ -112.943173307259215, 40.731180499026088 ], [ -112.942354730711799, 40.729487279163997 ], [ -112.941289587852765, 40.728946733367437 ], [ -112.939191424847735, 40.728549635381356 ], [ -112.935457081316798, 40.727963775204742 ], [ -112.933794236337391, 40.727212473539616 ], [ -112.932401627588462, 40.72587561202451 ], [ -112.931270442582516, 40.723737149393664 ], [ -112.9301303420701, 40.721364617176519 ], [ -112.930485827374952, 40.719300356144643 ], [ -112.930409708575468, 40.717473014308283 ], [ -112.931184013155217, 40.714591011357122 ], [ -112.93152906211408, 40.711950394085456 ], [ -112.930876117378276, 40.706137682907332 ], [ -112.930778313957774, 40.702252371180826 ], [ -112.931328948629485, 40.69916242530298 ], [ -112.936580756414074, 40.696660253310178 ], [ -112.938764660889163, 40.695011146522098 ], [ -112.940566897525244, 40.691530781430728 ], [ -112.941214191932232, 40.684998109054888 ], [ -112.941780454058474, 40.681434920200289 ], [ -112.942206687207388, 40.677419181214006 ], [ -112.941452219891545, 40.673896232618425 ], [ -112.940727666492066, 40.671057389379257 ], [ -112.939550887732622, 40.668685545119409 ], [ -112.938323308396221, 40.667224346686638 ], [ -112.937608005751429, 40.66620494250607 ], [ -112.936386359609529, 40.663604113257527 ], [ -113.000812213867178, 40.703906695268891 ], [ -113.027928725111593, 40.720844600093265 ], [ -113.064656955551442, 40.706879812391534 ], [ -113.07235528238364, 40.704395296803241 ], [ -113.134099847827684, 40.709512615935864 ], [ -113.140074595629827, 40.710618040959943 ], [ -113.142985302461028, 40.711442301011893 ] ] ] ] }
+
+    var AllotmentStyle = {
+          weight: 3,
+          opacity: 1,
+          color: 'white',
+          fillOpacity: 0,
+          // fillColor: getColor(feature.properties.LHS_CLASS)
+      }
+
+    L.geoJson( AllotmentBoundary, {
+      style: AllotmentStyle
+    }).addTo(map);
+
+    map.touchZoom.disable();
+    map.scrollWheelZoom.disable()
+
+  </script>
+</div>
+</div>
+</body>
+</html>
