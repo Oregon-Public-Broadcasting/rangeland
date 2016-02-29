@@ -6,13 +6,14 @@ Data on rangeland health assessments comes from ecologist Peter Lattin and Publi
 
 The geospatial data that make up the maps of grazing allotments shown in this project come from the Bureau of Land Management's [GeoCommunicator](http://www.geocommunicator.gov/GeoComm/) site. Allotments inthe map file were merged with rangeland health assessments and the downloaded data from the Rangeland Administartion System based on unique allotment identification numbers assigned to them by the BLM. The number of allotments, operators and permits is fluid and can change over time. Thus, there is a small number of allotments in the BLM's administrative database that do not have a counterpart on the map, and vice versa. Certain allotments in the map that have no counterpart in the administrative data, such as a large allotment in Wyoming that covered the city of Cheyenne, were omitted from this map because there was no indication they were currently used for grazing and represented current grazing allotments.
 
-The raw data used in this project can be found [here]().
+The raw data used in this project can be found [here](https://github.com/tonyschick/rangeland/tree/master/raw). The folder `rangeland-administration-system` contains data downloaded from the BLM. The folder `rangeland-health-assessments` contains BLM data obtained via PEER. This folder contains raw data released by the BLM in 2007 and 2012, as well as PEER's cleaned and merged version of these datasets, with processing notes. The `boundaries` folder contains a zipped Shapefile that contains a merge of grazing allotment boundaries and PEER's final version of the rangeland health assessment data.
+
+The OPB/EarthFix data analysis and the data processing for use in the web application were done in Python. You can find the steps in the analysis and the processing here. The pages in interactive were generated using the Django web framework, for which the code is also included in this repository. Pages were ultimately "baked" out into static html, javascript and css files now hosted on Amazon S3.
 
 A few notes about the data:
 
-- Because the rangeland health assessment dataset is from 2013, it offers a snapshot in time. Some grazing allotments might have had addtional assessments since then, and their status could have changed. 
+- Because the rangeland health assessment dataset is from 2013, it offers a snapshot in time. Some grazing allotments might have had addtional assessments since then, and their status could have changed.
 
 - Assessments done on allotments are based on a sampling of acres, in some cases a very small portion of the total amount of acres on the allotment. Thus, and allotment given a passing grade could have acres within it that do not meet federal rangeland health standards. Likewise, an allotment with a failing grade could have acres within it that are actually health rangeland.
 
 - The nubmer of allotments and acres that have been evaluated, and their grades, in the raw data do not match with the Bureau of Land Management's aggregate reports. BLM staff were unsure of the exact reason. However, the agency's aggregate reports are not based on this raw data but instead on reporting by individual states. The BLM says some overcounting could be occuring in its aggregate reports, because states could report multiple assessements done on the same allotments year by year.
-
